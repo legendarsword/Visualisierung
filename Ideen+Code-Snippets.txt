@@ -16,6 +16,8 @@ Wenn der vorherige PieChart aufgerufen wird, wird bei beide Stacks pop() aufgeru
 Nach 3. Auswahl würde ich eine result.html mit einer Tabelle und ggf. einer schönen Infoseite mit einer auswählbaren Seite.
 
 
+Ich habe zum Testen folgenden Befehl benutzt: python3 -m http.server 8080
+
 --------------------- Code-Snippets ---------------------------------
 
 // SQL-Group-By in D3 mit mehreren Spalten
