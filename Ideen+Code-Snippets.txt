@@ -1,0 +1,40 @@
+Ideen zur Struktur (lange nicht fertig :D)
+Nutzung vom Stack als Höhenorientierung
+dataStack.peek() = Enthält alle Daten (als Array), die für diese Ebene zur Verfügung stehen
+categoriesStack.peek() = Enthält alle übrigen Kategorien zur Auswahl (als Array)
+
+filterByKeyWord(layerData, columnname, keyword): Array = Filtert alle Ergebnisse für die nächste Filterung heraus (in SQL: "select * from data Where ...")
+groupForVisualisation(layerData, columnName): dataArray/Map = Gruppiert die layerData für die Darstellung im PieChart
+
+Grundidee:
+In der HTML-Seite kann ausgewählt werden, nach welcher Kategorie sortiert wird. Anhand dieser Auswahl werden die Daten gruppiert und als SVG angezeigt (Neuladen bei Kategorieänderung?).
+Wenn eine Auswahl getätigt wird (klick auf die Auswahl), werden die Daten anhand der Kategorie und Auswahl gefiltert (meist layerData = dataStack.peek()) und die gefilterten Daten auf den Stack gelegt.
+Zusätzlich werden die übrigen Kategorien auf den categoriesStack gelegt.
+Danach wird der neue Inhalt geladen, in dem die aktuellen Daten (dataStack.peek() + categoriesStack.peek()) aus den Stacks geladen und verarbeitet werden -> categoriesStack.peek() wird die neue Kategorien auswahl, dataStack.peek() werden in groupForVisualisation() gruppiert/sumiert und anschließend in ein SVG umgewandelt.
+Wenn der vorherige PieChart aufgerufen wird, wird bei beide Stacks pop() aufgerufen (dadurch haben wir die Höhe und alle Daten aus allen Iterationen).
+
+Nach 3. Auswahl würde ich eine result.html mit einer Tabelle und ggf. einer schönen Infoseite mit einer auswählbaren Seite.
+
+
+--------------------- Code-Snippets ---------------------------------
+
+// SQL-Group-By in D3 mit mehreren Spalten
+
+d3.csv("daten.csv").then(data => {
+    let rollup = d3.rollup(data,
+        v => ({
+            sumSpalte1: d3.sum(v, d => +d.spalte1),
+            sumSpalte2: d3.sum(v, d => +d.spalte2),
+            sumSpalte3: d3.sum(v, d => +d.spalte3)
+        }),
+        d => d.kategorisierung // Gruppierung nach einer bestimmten Spalte
+    );
+
+    console.log(rollup);
+});
+
+// For-Each
+data.forEach(function(d){
+            d["financialLoss"]=parseFloat(d["Financial Loss (in Million $)"]);
+            //d["displacement(cc)"]= parseFloat(d["displacement (cc)"]);
+        });
