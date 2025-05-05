@@ -18,6 +18,15 @@ Nach 3. Auswahl würde ich eine result.html mit einer Tabelle und ggf. einer sch
 
 Ich habe zum Testen folgenden Befehl benutzt: python3 -m http.server 8080
 
+--------------------- Entscheidungen --------------------------------
+2 Diagramme werden erzeugt, um einfacher zu Programmieren
+Donut: Alex , Bar: Ana
+
+Harte Kategorien (Country beide):
+    Alex: Incident-ResolutionTime, Year,
+    Ana: Vulnerability Type, Target Industry,
+
+
 --------------------- Code-Snippets ---------------------------------
 
 // SQL-Group-By in D3 mit mehreren Spalten
