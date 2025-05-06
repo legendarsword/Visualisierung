@@ -8,7 +8,9 @@ async function init(){
     //console.log("Init aufgerufen.");
     let promise = await initializeData();
     await promise;
+    console.log(dataStack.peek());
     visualiseData();
+
 }
 
 async function initializeData(){
@@ -82,7 +84,7 @@ function visualiseData() {
     const pie = d3.pie()
         .value(function (d) {
             //TODO: Vernünftiges Array umbauen
-            return d[1][1].incidentResolutionTime
+            return d[1][1].financialLoss
         })
     const data_ready = pie(Object.entries(layerData))
     //Erzeugen des Daten Donuts
@@ -123,7 +125,7 @@ function visualiseData() {
         .outerRadius(149);
 
     svg.append('path')
-        .style("fill", "#a05d56")
+        .style("fill", "#ffffff")
         .attr("d", arcSelect)
         .text("Ebene nach Oben")
         .style("opacity", 0.4)
