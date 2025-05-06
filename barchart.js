@@ -17,8 +17,13 @@ export async function init() {
     const color = d3.scaleOrdinal([true, false], ["steelblue", "#aaa"])
     const barStep = 27
     const barPadding = 3 / barStep
+    const duration = 750;
 
     const x = d3.scaleLinear().range([marginLeft, width - marginRight])
+
+    let max = 1;
+    root.each(d => d.children && (max = Math.max(max, d.children.length)));
+    const height = max * barStep + marginTop + marginBottom;
 
     const xAxis = g => g
         .attr("class", "x-axis")
@@ -32,11 +37,7 @@ export async function init() {
         .call(g => g.append("line")
             .attr("stroke", "currentColor")
             .attr("y1", marginTop)
-            .attr("y2", height - marginBottom))
-
-    let max = 1;
-    root.each(d => d.children && (max = Math.max(max, d.children.length)));
-    const height = max * barStep + marginTop + marginBottom;
+            .attr("y2", root.children.length * barStep + marginTop))
 
     const svg = d3.create("svg")
         .attr("viewBox", [0, 0, width, height])
@@ -53,6 +54,7 @@ export async function init() {
         .attr("width", width)
         .attr("height", height)
         .attr("cursor", "pointer")
+        .datum(root)
         .on("click", (event, d) => up(svg, d));
 
     svg.append("g").call(xAxis);
@@ -96,6 +98,8 @@ export async function init() {
     }
 
     function down(svg, d) {
+        console.log("DOWN CLICKED:", d);
+
         const duration = 750
         const barStep = 27
 
@@ -157,6 +161,8 @@ export async function init() {
     }
 
     function up(svg, d) {
+        console.log("UP CLICKED:", d);
+
         if (!d.parent || !svg.selectAll(".exit").empty()) return;
 
         // Rebind the current node to the background.
