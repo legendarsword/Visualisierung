@@ -5,6 +5,7 @@ var dataStack = new Stack();
 var categoriesStack = new Stack();
 var sortSelect;
 var categorySelect;
+var currentForm = "Visual";
 
 async function init(){
     //console.log("Init aufgerufen.");
@@ -13,6 +14,7 @@ async function init(){
     console.log("init: Erster Log: ")
     console.log(dataStack.peek());
     createSelection();
+    initButton();
     visualiseData();
 
 
@@ -170,6 +172,7 @@ function groupForVisualisation(column){
 // Diese Funktion soll das SVG erstellen
 function visualiseData() {
     var layerData = groupForVisualisation(categorySelect);
+    //createSelection();
     console.log("layerData:")
     console.log(layerData);
     var width = 450
@@ -261,6 +264,52 @@ function visualiseData() {
         });
 }
 
+function showData(){
+    var data = dataStack.peek();
+    console.log("Show data: ")
+    console.log(data)
+    var column = ["Country", "Year", "Attack Type", "Target Industry", "Financial Loss (in Million $)", "Number of Affected Users", "Attack Source", "Security Vulnerability Type", "Defense Mechanism Used", "Incident Resolution Time (in Hours)"];
+    console.log("Show Columns: ")
+    console.log(column)
+    var width = 850
+    var height = 450
+    var margin = 10
+    // Erzeugen des Containers
+    var table = d3.select("#graph-container")
+        .append("table")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    var thead = table.append('thead')
+    var tbody = table.append("tbody")
+    thead.append("tr")
+        .selectAll("th")
+        .data(column)
+        .enter()
+        .append("th")
+        .text(function (column){ return column;})
+    // create a row for each object in the data
+	var rows = tbody.selectAll('tr')
+	  .data(dataStack.peek())
+	  .enter()
+	  .append('tr');
+    // create a cell in each row for each column
+	var cells = rows.selectAll('td')
+	  .data(function (row) {
+	    return column.map(function (column) {
+	      return {column: column, value: row[column]};
+	    });
+	  })
+	  .enter()
+	  .append('td')
+	    .text(function (d) { return d.value; });
+}
+
+function updateInfo(){
+
+}
+
 function createSelection(){
     var i, L = document.getElementById('categorySelector').options.length - 1;
     for(i = L; i >= 0; i--) {
@@ -310,6 +359,31 @@ function createSelection(){
     sortSelect = sortArray.at(0).at(0);
     console.log("sortSelect: " + sortSelect + ", categorySelect: " + categorySelect);
 }
+
+
+
+function initButton(){
+    let switchFormButton = document.getElementById("switchButton");
+    console.log(switchFormButton)
+    switchFormButton.innerHTML = 'Show raw Data!';
+    switchFormButton.onclick = function(){
+        if (currentForm == "Visual"){
+            currentForm = "Data"
+            switchFormButton.innerHTML = 'Show Visualization!';
+            d3.select("svg").remove("svg")
+            document.getElementById("my-select").style.display = 'none';
+            showData();
+        } else {
+            currentForm = "Visual"
+            switchFormButton.innerHTML = 'Show raw Data!';
+            d3.select("table").remove("table")
+            document.getElementById("my-select").style.display = '';
+            visualiseData();
+        }
+    }
+    
+}
+
 
 // Testfunktion
 function testFunction(){
