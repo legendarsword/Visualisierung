@@ -46,7 +46,7 @@ async function initializeData(){
 function filterByKeyword(columnName, keyWord){
     //console.log(dataStack.peek());
     let result;
-    console.log("FilterByKeyword: Columnname: " + columnName + ", Keyword: " + keyWord);
+    //console.log("FilterByKeyword: Columnname: " + columnName + ", Keyword: " + keyWord);
     switch (columnName) {
         case "Financial Loss (in Million $)":
         case "Number of Affected Users":
@@ -73,11 +73,9 @@ function filterByKeyword(columnName, keyWord){
         default:
             console.log("Fehler in der Gruppierung: " + column)
     }
-    var newCategories = categoriesStack.peek().filter(function(d) {
-        return d !== columnName;
-    })
+    var newCategories = categoriesStack.peek().filter(function(d) { return d !== columnName;})
 
-    console.log(result)    
+    //console.log(result)    
     dataStack.push(result);
     categoriesStack.push(newCategories);
 }
@@ -93,17 +91,12 @@ function groupForVisualisation(column){
     let minimum = 0, maximum = 0, nullBezug = 0, schrittweite = 0, objekt1, high = 0, low = 0
     switch (column) {
         case "Country":
-            //TOOO: In ein vernünftiges Array umbauen -> Siehe Zeile 82
-            result = d3.rollups(dataStack.peek(),
-                (D) => ({
-                    financialLoss: d3.sum(D, d => +d["Financial Loss (in Million $)"]),
-                    usersAffected: d3.sum(D, d => +d["Number of Affected Users"]),
-                    incidentResolutionTime: d3.sum(D, d => +d["Incident Resolution Time (in Hours)"]),
-                    count: d3.count(D, d => d["Incident Resolution Time (in Hours)"])
-                }),
-                (d) => d.Country);
-            break;
         case "Attack Type":
+        case "Attack Source":
+        case "Security Vulnerability Type":
+        case "Defense Mechanism Used":
+        case "Year":
+        case "Target Industry":
             //TOOO: In ein vernünftiges Array umbauen -> Siehe Zeile 82
             result = d3.rollups(dataStack.peek(),
                 (D) => ({
@@ -112,19 +105,12 @@ function groupForVisualisation(column){
                     incidentResolutionTime: d3.sum(D, d => +d["Incident Resolution Time (in Hours)"]),
                     count: d3.count(D, d => d["Incident Resolution Time (in Hours)"])
                 }),
-                (d) => d["Attack Type"]);
+                (d) => d[column]);
             break;
-        case "Target Industry":
-            result = d3.rollups(dataStack.peek(),
-                (D) => ({
-                    financialLoss: d3.sum(D, d => +d["Financial Loss (in Million $)"]),
-                    usersAffected: d3.sum(D, d => +d["Number of Affected Users"]),
-                    incidentResolutionTime: d3.sum(D, d => +d["Incident Resolution Time (in Hours)"]),
-                    count: d3.count(D, d => d["Incident Resolution Time (in Hours)"])
-                }),
-                (d) => d["Target Industry"]);
-            break;
+        
         case "Financial Loss (in Million $)":
+        case "Number of Affected Users":
+        case "Incident Resolution Time (in Hours)":
             minimum = Math.round(d3.min(dataStack.peek(), (d) => d[column]));
             maximum = Math.round(d3.max(dataStack.peek(), (d) => d[column]));
             nullBezug = maximum - minimum;
@@ -173,138 +159,8 @@ function groupForVisualisation(column){
             });
             console.log("minumum: " + minimum + ", maximum: " + maximum + ", nullBezug: " + nullBezug)
             break;
-        case "Number of Affected Users":
-            minimum = d3.min(dataStack.peek(), (d) => d[column]);
-            maximum = d3.max(dataStack.peek(), (d) => d[column]);
-            nullBezug = maximum - minimum;
-            schrittweite = Math.round(nullBezug / 5);
-            result = []
-            objekt1 = {
-                incidentResolutionTime: 0,
-                financialLoss: 0,
-                count: 0,
-                usersAffectedLow: 0,
-                usersAffectedHigh: Math.round(schrittweite/2)
-            }
-            for (let index = 0; index < 5; index++) {
-                result.push([objekt1.usersAffectedLow + "-" + objekt1.usersAffectedHigh, structuredClone(objekt1)])
-                objekt1.usersAffectedLow = objekt1.usersAffectedHigh + 1
-                objekt1.usersAffectedHigh = objekt1.usersAffectedHigh + schrittweite
-            }
-            dataStack.peek().forEach(element => {
-                if (element[column] <= result[0][1].usersAffectedHigh) {
-                    result[0][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
-                    result[0][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[0][1].count += 1
-                } else if (element[column] <= result[1][1].usersAffectedHigh) {
-                    result[1][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
-                    result[1][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[1][1].count += 1
-                } else if (element[column] <= result[2][1].usersAffectedHigh) {
-                    result[2][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
-                    result[2][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[2][1].count += 1
-                } else if (element[column] <= result[3][1].usersAffectedHigh) {
-                    result[3][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
-                    result[3][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[3][1].count += 1
-                } else {
-                    result[4][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
-                    result[4][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[4][1].count += 1
-                } 
-            });
-            console.log("minumum: " + minimum + ", maximum: " + maximum + ", nullBezug: " + nullBezug)
-            break;
-        case "Attack Source":
-            result = d3.rollups(dataStack.peek(),
-                (D) => ({
-                    financialLoss: d3.sum(D, d => +d["Financial Loss (in Million $)"]),
-                    usersAffected: d3.sum(D, d => +d["Number of Affected Users"]),
-                    incidentResolutionTime: d3.sum(D, d => +d["Incident Resolution Time (in Hours)"]),
-                    count: d3.count(D, d => d["Incident Resolution Time (in Hours)"])
-                }),
-                (d) => d["Attack Source"]);
-            break;
-        case "Security Vulnerability Type":
-            result = d3.rollups(dataStack.peek(),
-                (D) => ({
-                    financialLoss: d3.sum(D, d => +d["Financial Loss (in Million $)"]),
-                    usersAffected: d3.sum(D, d => +d["Number of Affected Users"]),
-                    incidentResolutionTime: d3.sum(D, d => +d["Incident Resolution Time (in Hours)"]),
-                    count: d3.count(D, d => d["Incident Resolution Time (in Hours)"])
-                }),
-                (d) => d["Security Vulnerability Type"]);
-            break;
-        case "Defense Mechanism Used":
-            result = d3.rollups(dataStack.peek(),
-                (D) => ({
-                    financialLoss: d3.sum(D, d => +d["Financial Loss (in Million $)"]),
-                    usersAffected: d3.sum(D, d => +d["Number of Affected Users"]),
-                    incidentResolutionTime: d3.sum(D, d => +d["Incident Resolution Time (in Hours)"]),
-                    count: d3.count(D, d => d["Incident Resolution Time (in Hours)"])
-                }),
-                (d) => d[["Defense Mechanism Used"]]);
-            break;
-        case "Incident Resolution Time (in Hours)":
-            minimum = d3.min(dataStack.peek(), (d) => d["Incident Resolution Time (in Hours)"]);
-            maximum = d3.max(dataStack.peek(), (d) => d["Incident Resolution Time (in Hours)"]);
-            nullBezug = maximum - minimum;
-            schrittweite = Math.round(nullBezug / 5);
-            result = []
-            objekt1 = {
-                financialLoss: 0,
-                usersAffected: 0,
-                count: 0,
-                hoursLow: 0,
-                hoursHigh: Math.round(schrittweite/2)
-            }
-            for (let index = 0; index < 5; index++) {
-                result.push([objekt1.hoursLow + "-" + objekt1.hoursHigh, structuredClone(objekt1)])
-                objekt1.hoursLow = objekt1.hoursHigh + 1
-                objekt1.hoursHigh = objekt1.hoursHigh + schrittweite
-            }
-            dataStack.peek().forEach(element => {
-                if (element["Incident Resolution Time (in Hours)"] <= result[0][1].hoursHigh) {
-                    result[0][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[0][1].usersAffected += element["Number of Affected Users"]
-                    result[0][1].count += 1
-                } else if (element["Incident Resolution Time (in Hours)"] <= result[1][1].hoursHigh) {
-                    result[1][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[1][1].usersAffected += element["Number of Affected Users"]
-                    result[1][1].count += 1
-                } else if (element["Incident Resolution Time (in Hours)"] <= result[2][1].hoursHigh) {
-                    result[2][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[2][1].usersAffected += element["Number of Affected Users"]
-                    result[2][1].count += 1
-                } else if (element["Incident Resolution Time (in Hours)"] <= result[3][1].hoursHigh) {
-                    result[3][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[3][1].usersAffected += element["Number of Affected Users"]
-                    result[3][1].count += 1
-                } else {
-                    result[4][1].financialLoss += element["Financial Loss (in Million $)"]
-                    result[4][1].usersAffected += element["Number of Affected Users"]
-                    result[4][1].count += 1
-                } 
-            });
-            
-            // Erzeuge eine Array mit Arrays. Format: ["Auswählbare Kategorie", ["Sortierwert 1", "Sortierwert 2"]]
-            console.log("minumum: " + minimum + ", maximum: " + maximum + ", nullBezug: " + nullBezug)
-            break;
-        case "Year":
-            result = d3.rollups(dataStack.peek(),
-                (D) => ({
-                    financialLoss: d3.sum(D, d => +d["Financial Loss (in Million $)"]),
-                    usersAffected: d3.sum(D, d => +d["Number of Affected Users"]),
-                    incidentResolutionTime: d3.sum(D, d => +d["Incident Resolution Time (in Hours)"]),
-                    count: d3.count(D, d => d["Incident Resolution Time (in Hours)"])
-                }),
-                (d) => d["Year"]);
-            break;
-
         default:
             console.log("Fehler in der Gruppierung: " + column)
-
     }
     return result
 }
