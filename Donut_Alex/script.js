@@ -45,8 +45,41 @@ async function initializeData(){
 // Diese Funktion filtert nach der Auswahl die aktuellen Daten
 function filterByKeyword(columnName, keyWord){
     //console.log(dataStack.peek());
+    let result;
     console.log("FilterByKeyword: Columnname: " + columnName + ", Keyword: " + keyWord);
-    dataStack.push(dataStack.peek());
+    switch (columnName) {
+        case "Financial Loss (in Million $)":
+        case "Number of Affected Users":
+        case "Incident Resolution Time (in Hours)":
+            const values = keyWord.split("-").sort()
+            console.log(values)
+            result = dataStack.peek().filter(function(d) {
+                return d[columnName] > values[0]
+            }). filter (function(d){
+                return d[columnName] < values[1]
+            })
+            break;
+        case "Country":
+        case "Attack Type":
+        case "Target Industry":
+        case "Attack Source":
+        case "Security Vulnerability Type":
+        case "Defense Mechanism Used":
+        case "Year":
+            result = dataStack.peek().filter(function(d) {
+                return d[columnName] == keyWord
+            })
+            break;
+        default:
+            console.log("Fehler in der Gruppierung: " + column)
+    }
+    var newCategories = categoriesStack.peek().filter(function(d) {
+        return d !== columnName;
+    })
+
+    console.log(result)    
+    dataStack.push(result);
+    categoriesStack.push(newCategories);
 }
 function groupForVisualisation(column){
     console.log("groupForVisualisation aufgerufen: " + column + ", dataStack.peek: ");
@@ -57,7 +90,7 @@ function groupForVisualisation(column){
     console.log(Object.entries(dataStack.peek()))
     console.log("groupForVis: " + column)
     var result;
-    let minimum = 0, maximum = 0, nullBezug = 0, schrittweite = 0, objekt1
+    let minimum = 0, maximum = 0, nullBezug = 0, schrittweite = 0, objekt1, high = 0, low = 0
     switch (column) {
         case "Country":
             //TOOO: In ein vernünftiges Array umbauen -> Siehe Zeile 82
@@ -92,41 +125,47 @@ function groupForVisualisation(column){
                 (d) => d["Target Industry"]);
             break;
         case "Financial Loss (in Million $)":
-            minimum = d3.min(dataStack.peek(), (d) => d[column]);
-            maximum = d3.max(dataStack.peek(), (d) => d[column]);
+            minimum = Math.round(d3.min(dataStack.peek(), (d) => d[column]));
+            maximum = Math.round(d3.max(dataStack.peek(), (d) => d[column]));
             nullBezug = maximum - minimum;
-            schrittweite = Math.round(nullBezug / 5);
+            schrittweite = parseInt(nullBezug / 5);
+            high = Math.round(schrittweite/2)
             result = []
             objekt1 = {
+                financialLoss: 0,
                 incidentResolutionTime: 0,
                 usersAffected: 0,
                 count: 0,
-                financialLossLow: 0,
-                financialLossHigh: Math.round(schrittweite/2)
             }
             for (let index = 0; index < 5; index++) {
-                result.push([objekt1.financialLossLow + "-" + objekt1.financialLossHigh, structuredClone(objekt1)])
-                objekt1.financialLossLow = objekt1.financialLossHigh + 1
-                objekt1.financialLossHigh = objekt1.financialLossHigh + schrittweite
+                result.push([low + "-" + high, structuredClone(objekt1)])
+                low = high + 1
+                high = high + schrittweite
             }
+            result.at(4)[0] = String(low + "-" + maximum);
             dataStack.peek().forEach(element => {
-                if (element[column] <= result[0][1].financialLossHigh) {
+                if (element[column] <= Math.round(schrittweite/2)) {
+                    result[0][1].financialLoss += element["Financial Loss (in Million $)"]
                     result[0][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
                     result[0][1].usersAffected += element["Number of Affected Users"]
                     result[0][1].count += 1
-                } else if (element[column] <= result[1][1].financialLossHigh) {
+                } else if (element[column] <= ((schrittweite *1) + Math.round(schrittweite/2))) {
+                    result[1][1].financialLoss += element["Financial Loss (in Million $)"]
                     result[1][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
                     result[1][1].usersAffected += element["Number of Affected Users"]
                     result[1][1].count += 1
-                } else if (element[column] <= result[2][1].financialLossHigh) {
+                } else if (element[column] <= ((schrittweite *2) + Math.round(schrittweite/2))) {
+                    result[2][1].financialLoss += element["Financial Loss (in Million $)"]
                     result[2][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
                     result[2][1].usersAffected += element["Number of Affected Users"]
                     result[2][1].count += 1
-                } else if (element[column] <= result[3][1].financialLossHigh) {
+                } else if (element[column] <= ((schrittweite * 3) + Math.round(schrittweite/2))) {
+                    result[3][1].financialLoss += element["Financial Loss (in Million $)"]
                     result[3][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
                     result[3][1].usersAffected += element["Number of Affected Users"]
                     result[3][1].count += 1
                 } else {
+                    result[4][1].financialLoss += element["Financial Loss (in Million $)"]
                     result[4][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
                     result[4][1].usersAffected += element["Number of Affected Users"]
                     result[4][1].count += 1
@@ -259,7 +298,6 @@ function groupForVisualisation(column){
                     usersAffected: d3.sum(D, d => +d["Number of Affected Users"]),
                     incidentResolutionTime: d3.sum(D, d => +d["Incident Resolution Time (in Hours)"]),
                     count: d3.count(D, d => d["Incident Resolution Time (in Hours)"])
-                    
                 }),
                 (d) => d["Year"]);
             break;
@@ -330,7 +368,10 @@ function visualiseData() {
         .style("stroke-width", "2px")
         .style("opacity", 0.7)
         .on("click", (event, d) => {
+            if (dataStack.size() > 2) alert("3x schon gesprungen")
             filterByKeyword(categorySelect, d.data[1][0]);
+            createSelection();
+            visualiseData();
         });
     // Erzeugen der Beschriftung
     svg.selectAll('slices')
@@ -357,12 +398,23 @@ function visualiseData() {
             if(dataStack.size() > 1){
                 console.log("Springe zurück")
                 dataStack.pop();
+                categoriesStack.pop();
+                createSelection();
                 visualiseData();
             } else console.log("Die erstes Ebene existiert schon")
         });
 }
 
 function createSelection(){
+    var i, L = document.getElementById('categorySelector').options.length - 1;
+    for(i = L; i >= 0; i--) {
+        document.getElementById('categorySelector').remove(i);
+    }
+    L = document.getElementById('sortSelector').options.length - 1;
+    for(i = L; i >= 0; i--) {
+        document.getElementById('sortSelector').remove(i);
+    }
+
     for (const element of categoriesStack.peek()){
         // Step 1: Create the option element
         const option = document.createElement('option');
