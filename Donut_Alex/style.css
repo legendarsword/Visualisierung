@@ -1,0 +1,9 @@
+.my-select {
+    display: flex;
+    justify-content: center;
+}
+
+select {
+    cursor: pointer;
+    flex: 1 0 50%;
+}

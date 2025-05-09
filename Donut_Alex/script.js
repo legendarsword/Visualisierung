@@ -1,8 +1,10 @@
 import Stack from "./stack.js"
 
-var dataFile = "data/Global_Cybersecurity_Threats_2015-2024.csv"
+var dataFile = "../data/Global_Cybersecurity_Threats_2015-2024.csv"
 var dataStack = new Stack();
 var categoriesStack = new Stack();
+var sortSelect = "Number of Affected Users";
+var categorySelect = "Country";
 
 async function init(){
     //console.log("Init aufgerufen.");
@@ -45,25 +47,84 @@ function filterByKeyword(columnName, keyWord){
 function groupForVisualisation(column){
     //console.log("groupForVisualisation aufgerufen: " + column);
     //console.log(dataStack.peek());
-    if (column === "Country") {
-        //TOOO: In ein vernünftiges Array umbauen -> Siehe Zeile 82
-        return d3.rollups(dataStack.peek(),
-            (D) => ({
-                financialLoss: d3.sum(D, d => +d.financialLoss),
-                usersAffected: d3.sum(D, d => +d.usersAffected),
-                incidentResolutionTime: d3.sum(D, d => +d.incidentResolutionTime)
-            }),
-            (d) => d.Country);
+    var result;
+    switch (column) {
+        case "Country":
+            //TOOO: In ein vernünftiges Array umbauen -> Siehe Zeile 82
+            result = d3.rollups(dataStack.peek(),
+                (D) => ({
+                    financialLoss: d3.sum(D, d => +d.financialLoss),
+                    usersAffected: d3.sum(D, d => +d.usersAffected),
+                    incidentResolutionTime: d3.sum(D, d => +d.incidentResolutionTime)
+                }),
+                (d) => d.Country);
+            break;
+        case "Attack Type":
+            //TOOO: In ein vernünftiges Array umbauen -> Siehe Zeile 82
+            result = d3.rollups(dataStack.peek(),
+                (D) => ({
+                    financialLoss: d3.sum(D, d => +d.financialLoss),
+                    usersAffected: d3.sum(D, d => +d.usersAffected),
+                    incidentResolutionTime: d3.sum(D, d => +d.incidentResolutionTime)
+                }),
+                (d) => d.attackType);
+            break;
+        case "Target Industry":
+            result = d3.rollups(dataStack.peek(),
+                (D) => ({
+                    financialLoss: d3.sum(D, d => +d.financialLoss),
+                    usersAffected: d3.sum(D, d => +d.usersAffected),
+                    incidentResolutionTime: d3.sum(D, d => +d.incidentResolutionTime)
+                }),
+                (d) => d.targetIndustry);
+            break;
+        case "financialLoss":
+
+            break;
+        case "userAffected":
+            break;
+        case "attackSource":
+            result = d3.rollups(dataStack.peek(),
+                (D) => ({
+                    financialLoss: d3.sum(D, d => +d.financialLoss),
+                    usersAffected: d3.sum(D, d => +d.usersAffected),
+                    incidentResolutionTime: d3.sum(D, d => +d.incidentResolutionTime)
+                }),
+                (d) => d.attackSource);
+            break;
+        case "vulnerabilityType":
+            result = d3.rollups(dataStack.peek(),
+                (D) => ({
+                    financialLoss: d3.sum(D, d => +d.financialLoss),
+                    usersAffected: d3.sum(D, d => +d.usersAffected),
+                    incidentResolutionTime: d3.sum(D, d => +d.incidentResolutionTime)
+                }),
+                (d) => d.vulnerabilityType);
+            break;
+        case "defenseMechanism":
+            result = d3.rollups(dataStack.peek(),
+                (D) => ({
+                    financialLoss: d3.sum(D, d => +d.financialLoss),
+                    usersAffected: d3.sum(D, d => +d.usersAffected),
+                    incidentResolutionTime: d3.sum(D, d => +d.incidentResolutionTime)
+                }),
+                (d) => d.defenseMechanism);
+            break;
+        case "incidentResolutionTime":
+            break;
+
+        default:
+            console.log("Fehler in der Gruppierung: " + column)
 
     }
-
+    return result
 }
 //
 
 
 // Diese Funktion soll das SVG erstellen
 function visualiseData() {
-    var layerData = groupForVisualisation("Country");
+    var layerData = groupForVisualisation("attacktype");
     console.log(layerData);
     var width = 450
     var height = 450
