@@ -1,49 +1,47 @@
-
-
 export async function init() {
-    console.log("Init aufgerufen.");
+    const config = {
+        margin: { top: 30, right: 30, bottom: 0, left: 100 },
+        width: 1000,
+        barStep: 27,
+        duration: 750,
+        color: d3.scaleOrdinal([true, false], ["steelblue", "#aaa"]),
+    };
+    config.barPadding = 3 / config.barStep;
 
-    const data = await d3.json("flare-2.json")
+    const x = d3.scaleLinear().range([config.margin.left, config.width - config.margin.right]);
+    const data = await d3.json("data/cyber_threats.json");
+
     const root = d3.hierarchy(data)
         .sum(d => d.value)
         .sort((a, b) => b.value - a.value)
-        .eachAfter(d => d.index = d.parent ? d.parent.index = d.parent.index + 1 || 0 : 0)
+        .eachAfter(d => d.index = d.parent ? d.parent.index = d.parent.index + 1 || 0 : 0);
 
-    const width = 1000
-    const marginTop = 30
-    const marginRight = 30
-    const marginBottom = 0
-    const marginLeft = 100
-    const color = d3.scaleOrdinal([true, false], ["steelblue", "#aaa"])
-    const barStep = 27
-    const barPadding = 3 / barStep
-    const duration = 750;
+    let maxChildren = 1;
+    root.each(d => {
+        if (d.children) maxChildren = Math.max(maxChildren, d.children.length);
+    });
 
-    const x = d3.scaleLinear().range([marginLeft, width - marginRight])
+    const height = maxChildren * config.barStep + config.margin.top + config.margin.bottom;
 
-    let max = 1;
-    root.each(d => d.children && (max = Math.max(max, d.children.length)));
-    const height = max * barStep + marginTop + marginBottom;
+    const svg = d3.select("#barchart").append("svg")
+        .attr("viewBox", [0, 0, config.width, height])
+        .attr("width", config.width)
+        .attr("height", height)
+        .attr("style", "max-width: 100%; height: auto;");
 
     const xAxis = g => g
         .attr("class", "x-axis")
-        .attr("transform", `translate(0,${marginTop})`)
-        .call(d3.axisTop(x).ticks(width / 80, "s"))
-        .call(g => (g.selection ? g.selection() : g).select(".domain").remove())
+        .attr("transform", `translate(0,${config.margin.top})`)
+        .call(d3.axisTop(x).ticks(config.width / 80, "s"))
+        .call(g => g.select(".domain").remove());
 
     const yAxis = g => g
         .attr("class", "y-axis")
-        .attr("transform", `translate(${marginLeft + 0.5},0)`)
+        .attr("transform", `translate(${config.margin.left + 0.5},0)`)
         .call(g => g.append("line")
             .attr("stroke", "currentColor")
-            .attr("y1", marginTop)
-            .attr("y2", root.children.length * barStep + marginTop))
-
-    const svg = d3.create("svg")
-        .attr("viewBox", [0, 0, width, height])
-        .attr("width", width)
-        .attr("height", height)
-        .attr("style", "max-width: 100%; height: auto;");
+            .attr("y1", config.margin.top)
+            .attr("y2", root.children.length * config.barStep + config.margin.top));
 
     x.domain([0, root.value]);
 
@@ -51,200 +49,142 @@ export async function init() {
         .attr("class", "background")
         .attr("fill", "none")
         .attr("pointer-events", "all")
-        .attr("width", width)
+        .attr("width", config.width)
         .attr("height", height)
         .attr("cursor", "pointer")
         .datum(root)
-        .on("click", (event, d) => up(svg, d));
+        .on("click", (_, d) => up(svg, d));
 
     svg.append("g").call(xAxis);
     svg.append("g").call(yAxis);
 
     down(svg, root);
 
-    document.getElementById("chart").appendChild(svg.node());
-
-    // Creates a set of bars for the given data node, at the specified index.
     function bar(svg, down, d, selector) {
-        const marginTop = 30
-        const marginLeft = 100
-        const barStep = 27
-        const barPadding = 3 / barStep
-
         const g = svg.insert("g", selector)
             .attr("class", "enter")
-            .attr("transform", `translate(0,${marginTop + barStep * barPadding})`)
+            .attr("transform", `translate(0,${config.margin.top + config.barStep * config.barPadding})`)
             .attr("text-anchor", "end")
             .style("font", "10px sans-serif");
 
-        const bar = g.selectAll("g")
+        const bars = g.selectAll("g")
             .data(d.children)
             .join("g")
-            .attr("cursor", d => !d.children ? null : "pointer")
-            .on("click", (event, d) => down(svg, d));
+            .attr("cursor", d => d.children ? "pointer" : null)
+            .on("click", (_, d) => down(svg, d));
 
-        bar.append("text")
-            .attr("x", marginLeft - 6)
-            .attr("y", barStep * (1 - barPadding) / 2)
+        bars.append("text")
+            .attr("x", config.margin.left - 6)
+            .attr("y", config.barStep * (1 - config.barPadding) / 2)
             .attr("dy", ".35em")
             .text(d => d.data.name);
 
-        bar.append("rect")
+        bars.append("rect")
             .attr("x", x(0))
             .attr("width", d => x(d.value) - x(0))
-            .attr("height", barStep * (1 - barPadding));
+            .attr("height", config.barStep * (1 - config.barPadding));
 
         return g;
     }
 
     function down(svg, d) {
-        console.log("DOWN CLICKED:", d);
-
-        const duration = 750
-        const barStep = 27
-
         if (!d.children || d3.active(svg.node())) return;
 
         // Rebind the current node to the background.
         svg.select(".background").datum(d);
-
         // Define two sequenced transitions.
-        const transition1 = svg.transition().duration(duration);
-        const transition2 = transition1.transition();
+        const t1 = svg.transition().duration(config.duration);
+        const t2 = t1.transition();
 
         // Mark any currently-displayed bars as exiting.
-        const exit = svg.selectAll(".enter")
-            .attr("class", "exit");
-
+        const exit = svg.selectAll(".enter").attr("class", "exit");
         // Entering nodes immediately obscure the clicked-on bar, so hide it.
-        exit.selectAll("rect")
-            .attr("fill-opacity", p => p === d ? 0 : null);
-
+        exit.selectAll("rect").attr("fill-opacity", p => p === d ? 0 : null);
         // Transition exiting bars to fade out.
-        exit.transition(transition1)
-            .attr("fill-opacity", 0)
-            .remove();
-
+        exit.transition(t1).attr("fill-opacity", 0).remove();
         // Enter the new bars for the clicked-on data.
         // Per above, entering bars are immediately visible.
-        const enter = bar(svg, down, d, ".y-axis")
-            .attr("fill-opacity", 0);
-
+        const enter = bar(svg, down, d, ".y-axis").attr("fill-opacity", 0);
         // Have the text fade-in, even though the bars are visible.
-        enter.transition(transition1)
-            .attr("fill-opacity", 1);
-
+        enter.transition(t1).attr("fill-opacity", 1);
         // Transition entering bars to their new y-position.
         enter.selectAll("g")
             .attr("transform", stack(d.index))
-            .transition(transition1)
-            .attr("transform", stagger());
+            .transition(t1).attr("transform", stagger());
 
         // Update the x-scale domain.
         x.domain([0, d3.max(d.children, d => d.value)]);
-
         // Update the x-axis.
-        svg.selectAll(".x-axis").transition(transition2)
-            .call(xAxis);
+        svg.selectAll(".x-axis").transition(t2).call(xAxis);
 
         // Transition entering bars to the new x-scale.
-        enter.selectAll("g").transition(transition2)
-            .attr("transform", (d, i) => `translate(0,${barStep * i})`);
+        enter.selectAll("g").transition(t2)
+            .attr("transform", (_, i) => `translate(0,${config.barStep * i})`);
 
         // Color the bars as parents; they will fade to children if appropriate.
         enter.selectAll("rect")
-            .attr("fill", color(true))
+            .attr("fill", config.color(true))
             .attr("fill-opacity", 1)
-            .transition(transition2)
-            .attr("fill", d => color(!!d.children))
+            .transition(t2)
+            .attr("fill", d => config.color(!!d.children))
             .attr("width", d => x(d.value) - x(0));
     }
 
     function up(svg, d) {
-        console.log("UP CLICKED:", d);
-
         if (!d.parent || !svg.selectAll(".exit").empty()) return;
 
         // Rebind the current node to the background.
         svg.select(".background").datum(d.parent);
-
         // Define two sequenced transitions.
-        const transition1 = svg.transition().duration(duration);
-        const transition2 = transition1.transition();
+        const t1 = svg.transition().duration(config.duration);
+        const t2 = t1.transition();
 
         // Mark any currently-displayed bars as exiting.
-        const exit = svg.selectAll(".enter")
-            .attr("class", "exit");
-
+        const exit = svg.selectAll(".enter").attr("class", "exit");
         // Update the x-scale domain.
         x.domain([0, d3.max(d.parent.children, d => d.value)]);
-
         // Update the x-axis.
-        svg.selectAll(".x-axis").transition(transition1)
-            .call(xAxis);
+        svg.selectAll(".x-axis").transition(t1).call(xAxis);
 
         // Transition exiting bars to the new x-scale.
-        exit.selectAll("g").transition(transition1)
-            .attr("transform", stagger());
-
+        exit.selectAll("g").transition(t1).attr("transform", stagger());
         // Transition exiting bars to the parent’s position.
-        exit.selectAll("g").transition(transition2)
-            .attr("transform", stack(d.index));
-
+        exit.selectAll("g").transition(t2).attr("transform", stack(d.index));
         // Transition exiting rects to the new scale and fade to parent color.
-        exit.selectAll("rect").transition(transition1)
+        exit.selectAll("rect").transition(t1)
             .attr("width", d => x(d.value) - x(0))
-            .attr("fill", color(true));
-
+            .attr("fill", config.color(true));
         // Transition exiting text to fade out.
         // Remove exiting nodes.
-        exit.transition(transition2)
-            .attr("fill-opacity", 0)
-            .remove();
+        exit.transition(t2).attr("fill-opacity", 0).remove();
 
         // Enter the new bars for the clicked-on data's parent.
-        const enter = bar(svg, down, d.parent, ".exit")
-            .attr("fill-opacity", 0);
-
+        const enter = bar(svg, down, d.parent, ".exit").attr("fill-opacity", 0);
         enter.selectAll("g")
-            .attr("transform", (d, i) => `translate(0,${barStep * i})`);
-
+            .attr("transform", (_, i) => `translate(0,${config.barStep * i})`);
         // Transition entering bars to fade in over the full duration.
-        enter.transition(transition2)
-            .attr("fill-opacity", 1);
-
+        enter.transition(t2).attr("fill-opacity", 1);
         // Color the bars as appropriate.
         // Exiting nodes will obscure the parent bar, so hide it.
         // Transition entering rects to the new x-scale.
         // When the entering parent rect is done, make it visible!
         enter.selectAll("rect")
-            .attr("fill", d => color(!!d.children))
+            .attr("fill", d => config.color(!!d.children))
             .attr("fill-opacity", p => p === d ? 0 : null)
-            .transition(transition2)
+            .transition(t2)
             .attr("width", d => x(d.value) - x(0))
-            .on("end", function (p) { d3.select(this).attr("fill-opacity", 1); });
+            .on("end", function () { d3.select(this).attr("fill-opacity", 1); });
     }
 
     function stack(i) {
-        const barStep = 27
         let value = 0;
-        return d => {
-            const t = `translate(${x(value) - x(0)},${barStep * i})`;
-            value += d.value;
-            return t;
-        };
+        return d => `translate(${x(value += d.value) - x(0)},${config.barStep * i})`;
     }
 
     function stagger() {
-        const barStep = 27
         let value = 0;
-        return (d, i) => {
-            const t = `translate(${x(value) - x(0)},${barStep * i})`;
-            value += d.value;
-            return t;
-        };
+        return (_, i) => `translate(${x(value += 0) - x(0)},${config.barStep * i})`;
     }
-
 }
 
 init();
