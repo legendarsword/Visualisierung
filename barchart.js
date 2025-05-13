@@ -1,8 +1,8 @@
 export async function init() {
     const config = {
-        margin: { top: 30, right: 30, bottom: 0, left: 100 },
-        width: 1000,
-        barStep: 27,
+        margin: { top: 30, right: 100, bottom: 50, left: 100 },
+        width: 1500,
+        barStep: 50,
         duration: 750,
         color: d3.scaleOrdinal([true, false], ["steelblue", "#aaa"]),
     };
@@ -12,7 +12,7 @@ export async function init() {
     const data = await d3.json("data/cyber_threats.json");
 
     const root = d3.hierarchy(data)
-        .sum(d => d.value)
+        .each(d => d.value = d.data.value)
         .sort((a, b) => b.value - a.value)
         .eachAfter(d => d.index = d.parent ? d.parent.index = d.parent.index + 1 || 0 : 0);
 
@@ -27,12 +27,12 @@ export async function init() {
         .attr("viewBox", [0, 0, config.width, height])
         .attr("width", config.width)
         .attr("height", height)
-        .attr("style", "max-width: 100%; height: auto;");
+        .attr("style", "max-width: 100%; height: 100%;");
 
     const xAxis = g => g
         .attr("class", "x-axis")
-        .attr("transform", `translate(0,${config.margin.top})`)
-        .call(d3.axisTop(x).ticks(config.width / 80, "s"))
+        .attr("transform", `translate(0,${height - 20})`)
+        .call(d3.axisTop(x).ticks(config.width / 200, "m"))
         .call(g => g.select(".domain").remove());
 
     const yAxis = g => g
@@ -65,7 +65,7 @@ export async function init() {
             .attr("class", "enter")
             .attr("transform", `translate(0,${config.margin.top + config.barStep * config.barPadding})`)
             .attr("text-anchor", "end")
-            .style("font", "10px sans-serif");
+            .style("font", "15px sans-serif");
 
         const bars = g.selectAll("g")
             .data(d.children)

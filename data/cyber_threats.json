@@ -1821,7 +1821,7 @@
           "value": 49
         },
         {
-          "name": "Man-in-the-Middle",
+          "name": "MITM",
           "children": [
             {
               "name": "Banking",
@@ -2101,5 +2101,6 @@
       ],
       "value": 287
     }
-  ]
+  ],
+  "value": 3001
 }
