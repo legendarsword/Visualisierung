@@ -16,7 +16,7 @@ Promise.all([
   d3.csv("data/census-regions.csv"),
   d3.tsv("data/financial_losses_2015_2024.tsv")
 ]).then(([regions, statesRaw]) => {
-  const states = statesRaw.slice(1).map(row => ({
+  const states = statesRaw.map(row => ({
     name: row[""],
     values: keys.map(key => parseNumber(row[key]))
   }));
@@ -42,7 +42,6 @@ Promise.all([
   const root = d3.hierarchy(grouped)
     .sum(d => Array.isArray(d.values) ? d3.sum(d.values) : 0)
     .sort((a, b) => b.value - a.value);
-
 
   const box = svg.append("g")
     .selectAll("g")
@@ -80,6 +79,7 @@ Promise.all([
         d.x1 += tx;
         d.y0 += ty;
         d.y1 += ty;
+        if (d.values) d.value = d.values[index];
       })
       .leaves();
   }
@@ -126,10 +126,15 @@ Promise.all([
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0);
 
+    // Update amount
+    leaf.select("text").selectAll("tspan")
+      .data(d => [d.data.name, formatNumber(d.value)])
+      .text((d, i) => d);
+
     leaf.exit().remove();
   }
 
-  // Инициализация
+  
   update(0);
 
   d3.select("#yearSlider")
