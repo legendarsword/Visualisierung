@@ -127,9 +127,17 @@ Promise.all([
         .attr("height", d => d.y1 - d.y0);
 
     // Update amount
-    leaf.select("text").selectAll("tspan")
-      .data(d => [d.data.name, formatNumber(d.value)])
-      .text((d, i) => d);
+   
+
+      leaf.select("text tspan:last-child")
+      .transition()
+      .duration(duration)
+      .tween("text", function(d) {
+        const i = d3.interpolate(parseNumber(this.textContent), d.value);
+        return function(t) {
+          this.textContent = formatNumber(i(t));
+        };
+      });
 
     leaf.exit().remove();
   }
