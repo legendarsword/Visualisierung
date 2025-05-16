@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Animated Treemap</title>
+  <title>Cyber Attacks</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-    svg {
-      max-width: 100%;
-      height: auto;
-      overflow: visible;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body>
-  <h1>Finantial Loss by Year (Animated Treemap)</h1>
-  <input type="range" id="yearSlider" min="0" max="20" step="1" value="0" />
-  <label id="yearLabel"></label>
-  <div id="chart"></div>
 
-  <script src="map.js"></script>
+<body>
+  <header>
+
+  </header>
+
+  <main class="main">
+    <h1 class="main_title">Global Cybersecurity Threats <br> 2015-2024 </h1>
+
+    <section class="finantial_loss" id="finantial_loss">
+      <div class="finantial_loss__container container grid">
+        <div class="finantial_loss__header">
+          <h1 class="finantial_loss__title">Finantial Loss by Year</h1>
+          <input class="finantial_loss__slider" type="range" id="yearSlider" min="0" max="20" step="1" value="0" />
+          <label class="finantial_loss__label" id="yearLabel"></label>
+          <div class="finantial_loss__chart" id="chart"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="barchart_attaks" id="barchart_attaks">
+      <div class="barchart_attaks__container container grid">
+        <div class="barchart_attaks__header">
+          <h1 class="barchart_attaks__title">Attacks by Country</h1>
+          <div class="barchart_attaks__chart" id="barchart"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/map.js"></script>
+  <script src="assets/js/barchart.js"></script>
 </body>
+
 </html>

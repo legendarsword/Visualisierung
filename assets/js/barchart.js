@@ -1,4 +1,4 @@
-export async function init() {
+async function init() {
     const config = {
         margin: { top: 30, right: 100, bottom: 50, left: 100 },
         width: 1500,
