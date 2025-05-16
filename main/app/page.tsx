@@ -1,13 +1,19 @@
-import Image from "next/image";
+"use client";
+import React from "react";
 import styles from "./page.module.css";
 import { Barchart } from "@/src/barchart/Barchart";
 import { FinancialMap } from "@/src/financial-map/FinancialMap";
+import { WavyBackground } from "@/src/components/ui/wavy-background";
 
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      <h1 className={styles.main_title}>Global Cybersecurity Threats <br/> 2015-2024 </h1>
+      <WavyBackground className="max-w-4xl mx-auto pb-40" backgroundFill="hsl(206, 4%, 4%)">
+        <p className="text-2xl md:text-4xl lg:text-7xl text-white font-bold inter-var text-center">
+        Global Cybersecurity Threats <br/> 2015-2024
+        </p>
+      </WavyBackground>
 
       <section className={styles.finantial_loss} id="finantial_loss">
         <div className={styles.container}>
