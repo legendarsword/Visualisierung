@@ -21,7 +21,6 @@ export default function Home() {
             <h1 className={styles.finantial_loss__title}>Finantial Loss by Year</h1>
             <label className={styles.finantial_loss__label} id="yearLabel"></label>
             <FinancialMap/>
-
           </div>
         </div>
       </section>

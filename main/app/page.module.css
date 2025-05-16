@@ -1,6 +1,5 @@
 /* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
 .section{
     padding: 4rem 0 2rem;
@@ -38,7 +37,15 @@
 
 
 /*======= FINANTIAL LOSS MAP =======*/
+.finantial_loss{
+    justify-content: center;
+    display: flex;
+}
+
 .finantial_loss__title{
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
     font-size: var(--big-font-size);
     background: var(--text-gradient);
     color: transparent;
@@ -70,7 +77,16 @@
 }
   
 
+/*======= BARCHART =======*/
+.barchart_attaks{
+    justify-content: center;
+    display: flex;
+}
+
 .barchart_attaks__title{
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    text-align: center;
     font-size: var(--big-font-size);
     background: var(--text-gradient);
     color: transparent;

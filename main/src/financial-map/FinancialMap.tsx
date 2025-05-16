@@ -1,5 +1,6 @@
 'use client';
 import * as d3 from 'd3'
+import styles from "@/app/page.module.css";
 import { useEffect, useState } from 'react';
 
 export const FinancialMap = () => {
@@ -7,7 +8,7 @@ export const FinancialMap = () => {
     const [inputValue, setInputValue] = useState('0');
 
     useEffect(() => {
-        const width = 928;
+        const width = 650;
         const height = width;
         const keys = d3.range(2015, 2024, 1);
 
@@ -161,7 +162,7 @@ export const FinancialMap = () => {
         }, [])
         return (
             <div>
-            <input type="range" id="yearSlider" min="0" max="20" step="1" value={inputValue} onChange={(event) => {setInputValue(event.target.value)}}/>
+            <input type="range" id="yearSlider" min="0" max="20" step="1" className={styles.finantial_loss__slider} value={inputValue} onChange={(event) => {setInputValue(event.target.value)}}/>
             <div id="chart"/>
         </div>
     )
