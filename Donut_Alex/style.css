@@ -1,3 +1,8 @@
+
+body {
+  background: #5f6a7d;
+  font-family: sans-serif;
+}
 .my-select {
     display: flex;
     justify-content: center;
@@ -6,4 +11,19 @@
 select {
     cursor: pointer;
     flex: 1 0 50%;
+}
+
+.outer-label {
+  font-size: 12px;
+  fill: #ccc;
+  text-align: center;
+}
+.center {
+  font-size: 18px;
+  text-transform: uppercase;
+  fill: #fff;
+}
+
+path {
+  cursor: pointer;
 }

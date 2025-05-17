@@ -6,13 +6,14 @@ var categoriesStack = new Stack();
 var sortSelect;
 var categorySelect;
 var currentForm = "Visual";
+var returnCircleColor = "#ffffff";
 
 async function init(){
     //console.log("Init aufgerufen.");
     let promise = await initializeData();
     await promise;
-    console.log("init: Erster Log: ")
-    console.log(dataStack.peek());
+    //console.log("init: Erster Log: ")
+    //console.log(dataStack.peek());
     createSelection();
     initButton();
     visualiseData();
@@ -38,7 +39,7 @@ async function initializeData(){
             categoriesStack.push(data.columns.slice(0));
             //console.log("Init Stack erzeugt.");
             //console.log(dataStack.peek());
-            console.log(categoriesStack.peek());
+            //console.log(categoriesStack.peek());
             return resolve("done");
         })
     });
@@ -46,9 +47,9 @@ async function initializeData(){
 
 // Diese Funktion filtert nach der Auswahl die aktuellen Daten
 function filterByKeyword(columnName, keyWord){
+    //console.log("FilterByKeyword: Columnname: " + columnName + ", Keyword: " + keyWord);
     //console.log(dataStack.peek());
     let result;
-    //console.log("FilterByKeyword: Columnname: " + columnName + ", Keyword: " + keyWord);
     switch (columnName) {
         case "Financial Loss (in Million $)":
         case "Number of Affected Users":
@@ -77,18 +78,14 @@ function filterByKeyword(columnName, keyWord){
     }
     var newCategories = categoriesStack.peek().filter(function(d) { return d !== columnName;})
 
+    //console.log("result")    
     //console.log(result)    
     dataStack.push(result);
     categoriesStack.push(newCategories);
 }
 function groupForVisualisation(column){
-    console.log("groupForVisualisation aufgerufen: " + column + ", dataStack.peek: ");
-    console.log(dataStack.peek());
-    //for (const element of dataStack.peek()){
-    //    console.log(element)
-    //}
-    console.log(Object.entries(dataStack.peek()))
-    console.log("groupForVis: " + column)
+    //console.log("groupForVisualisation aufgerufen: " + column + ", dataStack.peek: ");
+    //console.log(dataStack.peek());
     var result;
     let minimum = 0, maximum = 0, nullBezug = 0, schrittweite = 0, objekt1, high = 0, low = 0
     switch (column) {
@@ -159,7 +156,7 @@ function groupForVisualisation(column){
                     result[4][1].count += 1
                 } 
             });
-            console.log("minumum: " + minimum + ", maximum: " + maximum + ", nullBezug: " + nullBezug)
+            //console.log("minumum: " + minimum + ", maximum: " + maximum + ", nullBezug: " + nullBezug)
             break;
         default:
             console.log("Fehler in der Gruppierung: " + column)
@@ -173,12 +170,12 @@ function groupForVisualisation(column){
 function visualiseData() {
     var layerData = groupForVisualisation(categorySelect);
     //createSelection();
-    console.log("layerData:")
-    console.log(layerData);
+    //console.log("layerData:")
+    //console.log(layerData);
     var width = 450
     var height = 450
     var margin = 10
-    var radius = Math.min(width, height) / 2 - margin
+    var radius = Math.min(width*0.9, height*0.9) / 2 - margin
     d3.select("svg").remove("svg")
     // Erzeugen des Containers
     var svg = d3.select("#graph-container")
@@ -189,37 +186,46 @@ function visualiseData() {
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
     // set the color scale
     const color = d3.scaleOrdinal()
-        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+        .range(["#ffb822","#00bf8c","#219ddb","#ad85cc","#f95275","#80B647","#11AEB4","#6791D4","#D36CA1","#FC803B"])
+    console.log("Color:")
+    console.log(color)
     // Compute the position of each group on the pie:
     const pie = d3.pie()
         .value(function (d) {
-            //TODO: Vernünftiges Array umbauen
             //console.log(d[1][1][sortSelect])
             // d -> Array-Objekt
             // d[1] -> Objekt aus Array (Test ist: ["Land", [finanzialLoss: ...]]) 
             // d[1][1] -> Werte aus Objekt
-            //console.log("Datenaufbau herausbekommen")
-            //console.log(d)
-            //console.log(d[1])
-            //console.log(d[1][1])
             return d[1][1][sortSelect]
         })
+        .sort(function (a,b){ return a[1][0] > b[1][0]})
     const data_ready = pie(Object.entries(layerData))
     
-    console.log("data_ready: ")
-    console.log(data_ready)
+    //console.log("data_ready: ")
+    //console.log(data_ready)
     //Erzeugen des Daten Donuts
     var label = d3.arc()
-        .innerRadius(120)
+        .innerRadius(0.8*radius)
         .outerRadius(radius)
+    var sliceArcs =  d3.arc()
+        .innerRadius(0.8*radius)
+        .outerRadius(radius)
+    var arcSelect = d3.arc()
+        .innerRadius(radius + 10)
+        .outerRadius(radius * 1.1);
+    var arcReturn = d3.arc()
+        .startAngle(0)
+        .endAngle(2*Math.PI)
+        .innerRadius(radius + 10)
+        .outerRadius(radius * 1.1);
+    var arcOver = d3.arc()
+        .outerRadius(radius +9 )
+        .innerRadius(0.8 * radius);
     // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-    svg.selectAll('slices')
+    var slices = svg.selectAll('slices')
         .data(data_ready)
         .join('path')
-        .attr('d', d3.arc()
-            .innerRadius(150)
-            .outerRadius(radius)
-        )
+        .attr('d', sliceArcs)
         .attr('fill', function (d) {
             return (color(d.data[1]))
         })
@@ -227,11 +233,53 @@ function visualiseData() {
         .style("stroke-width", "2px")
         .style("opacity", 0.7)
         .on("click", (event, d) => {
-            if (dataStack.size() > 2) alert("3x schon gesprungen")
-            filterByKeyword(categorySelect, d.data[1][0]);
-            createSelection();
-            visualiseData();
+            console.log("Click-Event:")
+            console.log(d)
+            if (dataStack.size() > 2) {
+                //alert ("3x gespungen")
+                let switchFormButton = document.getElementById("switchButton");
+                currentForm = "Data"
+                switchFormButton.innerHTML = 'Show Visualization!';
+                d3.select("svg").remove("svg")
+                document.getElementById("my-select").style.display = 'none';
+                showData();
+            } else {
+                filterByKeyword(categorySelect, d.data[1][0]);
+                createSelection();
+                console.log("Data Index:");
+                const colorse = d3.select(this).attr("fill");
+                console.log(colorse);
+                returnCircleColor = d3.select(this).attr("fill");
+                slices.transition()
+                .duration(1000)
+                .attrTween("d", function (d) {
+                    var newAngle = d.startAngle + 2 * Math.PI;
+                    var interpolate = d3.interpolate(d.endAngle, newAngle);
+                    return function(tick) {
+                        d.endAngle = interpolate(tick);
+                    return arcSelect(d);
+                };})
+                .on("end", function(){
+                    visualiseData();
+                });  
+            }})
+        .on("mouseover", function () {
+            //return false;
+            d3.select(this).transition()
+                //.attr('fill', "#219ddb");
+                //.ease(1)
+                .duration(100)
+                .attr("d", arcOver);
+        })
+        .on("mouseout", function () {
+            //return false;
+            d3.select(this).transition()
+                //.attr('fill', "#6791D4");
+                //.ease(1)
+                .duration(500)
+                .attr("d", sliceArcs);
         });
+        
     // Erzeugen der Beschriftung
     svg.selectAll('slices')
         .data(data_ready)
@@ -240,37 +288,35 @@ function visualiseData() {
         .text(function(d){ return d.data[1][0]})
         .attr("transform", function(d) { return "translate(" + label.centroid(d) + ")";  })
         .style("text-anchor", "middle")
-        .style("font-size", 17);
-    //Erzeugen des inneren Kerns fürs zurückspringen
-    var arcSelect = d3.arc()
-        .startAngle(0)
-        .endAngle(2*Math.PI)
-        .innerRadius(0)
-        .outerRadius(149);
-
-    svg.append('path')
-        .style("fill", "#ffffff")
-        .attr("d", arcSelect)
-        .text("Ebene nach Oben")
-        .style("opacity", 0.4)
-        .on("click", function (d){
-            if(dataStack.size() > 1){
-                console.log("Springe zurück")
-                dataStack.pop();
-                categoriesStack.pop();
-                createSelection();
-                visualiseData();
-            } else console.log("Die erstes Ebene existiert schon")
-        });
+        .style("font-size", 17)
+        ;
+        
+    //Erzeugen des inneren Kerns fürs zurückspringen    
+    if (dataStack.size() > 1){
+        svg.append('path')
+            .style("fill", returnCircleColor)
+            .attr("d", arcReturn)
+            .text("Ebene nach Oben")
+            .style("opacity", 0.8)
+            .on("click", function (d){
+                if(dataStack.size() > 1){
+                    console.log("Springe zurück")
+                    dataStack.pop();
+                    categoriesStack.pop();
+                    createSelection();
+                    visualiseData();
+                } else console.log("Die erstes Ebene existiert schon")
+            });
+    }
 }
 
 function showData(){
     var data = dataStack.peek();
-    console.log("Show data: ")
-    console.log(data)
+    //console.log("Show data: ")
+    //console.log(data)
     var column = ["Country", "Year", "Attack Type", "Target Industry", "Financial Loss (in Million $)", "Number of Affected Users", "Attack Source", "Security Vulnerability Type", "Defense Mechanism Used", "Incident Resolution Time (in Hours)"];
-    console.log("Show Columns: ")
-    console.log(column)
+    //console.log("Show Columns: ")
+    //console.log(column)
     var width = 850
     var height = 450
     var margin = 10
@@ -346,25 +392,25 @@ function createSelection(){
 
     document.getElementById('sortSelector').onchange = function(){
         sortSelect = document.getElementById('sortSelector').value;
-        console.log(sortSelect)
+        //console.log(sortSelect)
         visualiseData();
     }
     document.getElementById('categorySelector').onchange = function(){
         categorySelect = document.getElementById('categorySelector').value;
-        console.log(categorySelect)
+        //console.log(categorySelect)
         visualiseData();
     }
 
     categorySelect = categoriesStack.peek().at(0);
     sortSelect = sortArray.at(0).at(0);
-    console.log("sortSelect: " + sortSelect + ", categorySelect: " + categorySelect);
+    //console.log("sortSelect: " + sortSelect + ", categorySelect: " + categorySelect);
 }
 
 
 
 function initButton(){
     let switchFormButton = document.getElementById("switchButton");
-    console.log(switchFormButton)
+    //console.log(switchFormButton)
     switchFormButton.innerHTML = 'Show raw Data!';
     switchFormButton.onclick = function(){
         if (currentForm == "Visual"){
