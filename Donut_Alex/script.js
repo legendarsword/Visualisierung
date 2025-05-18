@@ -1,8 +1,8 @@
-import Stack from "./stack.js"
+//import Stack from "./stack.js"
 
 var dataFile = "../data/Global_Cybersecurity_Threats_2015-2024.csv"
-var dataStack = new Stack();
-var categoriesStack = new Stack();
+var dataStack = [];
+var categoriesStack = [];
 var sortSelect;
 var categorySelect;
 var currentForm = "Visual";
@@ -13,7 +13,7 @@ async function init(){
     let promise = await initializeData();
     await promise;
     //console.log("init: Erster Log: ")
-    //console.log(dataStack.peek());
+    //console.log(dataStack.at(dataStack.length -1));
     createSelection();
     initButton();
     visualiseData();
@@ -38,8 +38,8 @@ async function initializeData(){
             dataStack.push(data);
             categoriesStack.push(data.columns.slice(0));
             //console.log("Init Stack erzeugt.");
-            //console.log(dataStack.peek());
-            //console.log(categoriesStack.peek());
+            //console.log(dataStack.at());
+            //console.log(categoriesStack.at(categoriesStack.length -1));
             return resolve("done");
         })
     });
@@ -48,7 +48,7 @@ async function initializeData(){
 // Diese Funktion filtert nach der Auswahl die aktuellen Daten
 function filterByKeyword(columnName, keyWord){
     //console.log("FilterByKeyword: Columnname: " + columnName + ", Keyword: " + keyWord);
-    //console.log(dataStack.peek());
+    //console.log(dataStack.at(dataStack.length -1));
     let result;
     switch (columnName) {
         case "Financial Loss (in Million $)":
@@ -56,7 +56,7 @@ function filterByKeyword(columnName, keyWord){
         case "Incident Resolution Time (in Hours)":
             const values = keyWord.split("-").sort()
             console.log(values)
-            result = dataStack.peek().filter(function(d) {
+            result = dataStack.at(dataStack.length -1).filter(function(d) {
                 return d[columnName] > values[0]
             }). filter (function(d){
                 return d[columnName] < values[1]
@@ -69,14 +69,14 @@ function filterByKeyword(columnName, keyWord){
         case "Security Vulnerability Type":
         case "Defense Mechanism Used":
         case "Year":
-            result = dataStack.peek().filter(function(d) {
+            result = dataStack.at(dataStack.length -1).filter(function(d) {
                 return d[columnName] == keyWord
             })
             break;
         default:
             console.log("Fehler in der Gruppierung: " + column)
     }
-    var newCategories = categoriesStack.peek().filter(function(d) { return d !== columnName;})
+    var newCategories = categoriesStack.at(categoriesStack.length -1).filter(function(d) { return d !== columnName;})
 
     //console.log("result")    
     //console.log(result)    
@@ -85,7 +85,7 @@ function filterByKeyword(columnName, keyWord){
 }
 function groupForVisualisation(column){
     //console.log("groupForVisualisation aufgerufen: " + column + ", dataStack.peek: ");
-    //console.log(dataStack.peek());
+    //console.log(dataStack.at(dataStack.length -1));
     var result;
     let minimum = 0, maximum = 0, nullBezug = 0, schrittweite = 0, objekt1, high = 0, low = 0
     switch (column) {
@@ -97,7 +97,7 @@ function groupForVisualisation(column){
         case "Year":
         case "Target Industry":
             //TOOO: In ein vernünftiges Array umbauen -> Siehe Zeile 82
-            result = d3.rollups(dataStack.peek(),
+            result = d3.rollups(dataStack.at(dataStack.length -1),
                 (D) => ({
                     financialLoss: d3.sum(D, d => +d["Financial Loss (in Million $)"]),
                     usersAffected: d3.sum(D, d => +d["Number of Affected Users"]),
@@ -110,8 +110,8 @@ function groupForVisualisation(column){
         case "Financial Loss (in Million $)":
         case "Number of Affected Users":
         case "Incident Resolution Time (in Hours)":
-            minimum = Math.round(d3.min(dataStack.peek(), (d) => d[column]));
-            maximum = Math.round(d3.max(dataStack.peek(), (d) => d[column]));
+            minimum = Math.round(d3.min(dataStack.at(dataStack.length -1), (d) => d[column]));
+            maximum = Math.round(d3.max(dataStack.at(dataStack.length -1), (d) => d[column]));
             nullBezug = maximum - minimum;
             schrittweite = parseInt(nullBezug / 5);
             high = Math.round(schrittweite/2)
@@ -128,7 +128,7 @@ function groupForVisualisation(column){
                 high = high + schrittweite
             }
             result.at(4)[0] = String(low + "-" + maximum);
-            dataStack.peek().forEach(element => {
+            dataStack.at(dataStack.length -1).forEach(element => {
                 if (element[column] <= Math.round(schrittweite/2)) {
                     result[0][1].financialLoss += element["Financial Loss (in Million $)"]
                     result[0][1].incidentResolutionTime += element["Incident Resolution Time (in Hours)"]
@@ -235,7 +235,7 @@ function visualiseData() {
         .on("click", (event, d) => {
             console.log("Click-Event:")
             console.log(d)
-            if (dataStack.size() > 2) {
+            if (dataStack.length > 2) {
                 //alert ("3x gespungen")
                 let switchFormButton = document.getElementById("switchButton");
                 currentForm = "Data"
@@ -292,14 +292,14 @@ function visualiseData() {
         ;
         
     //Erzeugen des inneren Kerns fürs zurückspringen    
-    if (dataStack.size() > 1){
+    if (dataStack.length > 1){
         svg.append('path')
             .style("fill", returnCircleColor)
             .attr("d", arcReturn)
             .text("Ebene nach Oben")
             .style("opacity", 0.8)
             .on("click", function (d){
-                if(dataStack.size() > 1){
+                if(dataStack.length > 1){
                     console.log("Springe zurück")
                     dataStack.pop();
                     categoriesStack.pop();
@@ -311,7 +311,7 @@ function visualiseData() {
 }
 
 function showData(){
-    var data = dataStack.peek();
+    var data = dataStack.at(dataStack.length -1);
     //console.log("Show data: ")
     //console.log(data)
     var column = ["Country", "Year", "Attack Type", "Target Industry", "Financial Loss (in Million $)", "Number of Affected Users", "Attack Source", "Security Vulnerability Type", "Defense Mechanism Used", "Incident Resolution Time (in Hours)"];
@@ -337,7 +337,7 @@ function showData(){
         .text(function (column){ return column;})
     // create a row for each object in the data
 	var rows = tbody.selectAll('tr')
-	  .data(dataStack.peek())
+	  .data(dataStack.at(dataStack.length -1))
 	  .enter()
 	  .append('tr');
     // create a cell in each row for each column
@@ -366,7 +366,7 @@ function createSelection(){
         document.getElementById('sortSelector').remove(i);
     }
 
-    for (const element of categoriesStack.peek()){
+    for (const element of categoriesStack.at(categoriesStack.length -1)){
         // Step 1: Create the option element
         const option = document.createElement('option');
 
@@ -401,7 +401,7 @@ function createSelection(){
         visualiseData();
     }
 
-    categorySelect = categoriesStack.peek().at(0);
+    categorySelect = categoriesStack.at(categoriesStack.length -1).at(0);
     sortSelect = sortArray.at(0).at(0);
     //console.log("sortSelect: " + sortSelect + ", categorySelect: " + categorySelect);
 }
