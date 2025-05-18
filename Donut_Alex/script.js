@@ -7,6 +7,9 @@ var sortSelect;
 var categorySelect;
 var currentForm = "Visual";
 var returnCircleColor = "#ffffff";
+// set the color scale
+const colorRange = d3.scaleOrdinal().range(["#ffb822","#00bf8c","#219ddb","#ad85cc","#f95275","#80B647","#11AEB4","#6791D4","#D36CA1","#FC803B"])
+
 
 async function init(){
     //console.log("Init aufgerufen.");
@@ -184,11 +187,8 @@ function visualiseData() {
         .attr("height", height)
         .append("g")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-    // set the color scale
-    const color = d3.scaleOrdinal()
-        .range(["#ffb822","#00bf8c","#219ddb","#ad85cc","#f95275","#80B647","#11AEB4","#6791D4","#D36CA1","#FC803B"])
-    console.log("Color:")
-    console.log(color)
+    
+    
     // Compute the position of each group on the pie:
     const pie = d3.pie()
         .value(function (d) {
@@ -199,6 +199,7 @@ function visualiseData() {
             return d[1][1][sortSelect]
         })
         .sort(function (a,b){ return a[1][0] > b[1][0]})
+        //.sort(null)
     const data_ready = pie(Object.entries(layerData))
     
     //console.log("data_ready: ")
@@ -210,9 +211,7 @@ function visualiseData() {
     var sliceArcs =  d3.arc()
         .innerRadius(0.8*radius)
         .outerRadius(radius)
-    var arcSelect = d3.arc()
-        .innerRadius(radius + 10)
-        .outerRadius(radius * 1.1);
+    
     var arcReturn = d3.arc()
         .startAngle(0)
         .endAngle(2*Math.PI)
@@ -227,14 +226,14 @@ function visualiseData() {
         .join('path')
         .attr('d', sliceArcs)
         .attr('fill', function (d) {
-            return (color(d.data[1]))
+            return (colorRange(d.data[1]))
         })
         .attr("stroke", "black")
         .style("stroke-width", "2px")
         .style("opacity", 0.7)
         .on("click", (event, d) => {
-            console.log("Click-Event:")
-            console.log(d)
+            //console.log("Click-Event:")
+            //console.log(d)
             if (dataStack.length > 2) {
                 //alert ("3x gespungen")
                 let switchFormButton = document.getElementById("switchButton");
@@ -246,22 +245,31 @@ function visualiseData() {
             } else {
                 filterByKeyword(categorySelect, d.data[1][0]);
                 createSelection();
-                console.log("Data Index:");
-                const colorse = d3.select(this).attr("fill");
-                console.log(colorse);
-                returnCircleColor = d3.select(this).attr("fill");
-                slices.transition()
-                .duration(1000)
-                .attrTween("d", function (d) {
-                    var newAngle = d.startAngle + 2 * Math.PI;
-                    var interpolate = d3.interpolate(d.endAngle, newAngle);
-                    return function(tick) {
-                        d.endAngle = interpolate(tick);
-                    return arcSelect(d);
-                };})
+                returnCircleColor = colorRange(d.index);
+                
+                var startAngle = d.startAngle;
+                var endAngle = d.startAngle + 2 * Math.PI;
+                var arcSelect = d3.arc()
+                    .startAngle(function (s){return startAngle;})
+                    .endAngle(function (s){return endAngle;})
+                    .innerRadius(0.8*radius)
+                    .outerRadius(radius);
+                var newArc = slices.join('path').style("fill", colorRange(d.index)).attr("d", arcSelect)
+                newArc.transition()
+                    .duration(1000)
+                    .attrTween("d", function(){
+                        var newAngle = d.startAngle + 2 * Math.PI;
+                        var interpolate = d3.interpolate(newAngle, d.endAngle);
+                        return function (tick) {
+                            console.log(newAngle + " " + interpolate(tick))
+                            endAngle = interpolate(tick);
+                            return arcSelect(d);
+                        };
+                    })
                 .on("end", function(){
                     visualiseData();
-                });  
+                });
+                //visualiseData();  
             }})
         .on("mouseover", function () {
             //return false;
@@ -354,6 +362,10 @@ function showData(){
 
 function updateInfo(){
 
+}
+
+function zoomIn(){
+    
 }
 
 function createSelection(){
