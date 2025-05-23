@@ -26,19 +26,25 @@
 </head>
 
 <body>
-<!-- <svg></svg> -->
-Willkommen beim Versuch ein Pie-Chart aufzubauen :D
-<div id="my-select">
-    <select type="select" name="sortSelector" id="sortSelector">
-        sort
-    </select>
-    <select type="select" name="categorySelector" id="categorySelector">
-        category
-    </select>
-
+<div id="donut-alex" class="donut-alex">
+    <div id="selector-container" class="selector-container">
+        <div class="selector-group">
+            <p style="height: 1%; display: block;">Chosen Category:</p>
+            <select type="select" name="categorySelector" id="categorySelector">
+                category
+            </select>
+            <p style="height: 1%; display: block;">Chosen Dataview:</p>
+            <select type="select" name="sortSelector" id="sortSelector">
+                sort
+            </select>
+        </div>
+    </div>
+    <div id="graph-container" class="graph-container"></div>
+    <div id="switchButton-div" class="switchButton-div">
+        <button type="button" id="switchButton"></button>
+    </div>
+    <div id="data-container" class="data-container"></div>
 </div>
-<div id="graph-container"></div>
-<button type="button" id="switchButton"></button>
 </body>
 </html>
 

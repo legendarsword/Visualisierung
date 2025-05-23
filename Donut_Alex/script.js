@@ -6,9 +6,10 @@ var categoriesStack = [];
 var sortSelect;
 var categorySelect;
 var currentForm = "Visual";
-var returnCircleColor = "#ffffff";
+var returnCircleColor = [];
 // set the color scale
-const colorRange = d3.scaleOrdinal().range(["#ffb822","#00bf8c","#219ddb","#ad85cc","#f95275","#80B647","#11AEB4","#6791D4","#D36CA1","#FC803B"])
+const colorArray = ["#ffb822","#00bf8c","#219ddb","#ad85cc","#f95275","#80B647","#11AEB4","#6791D4","#D36CA1","#FC803B"]
+const colorRange = d3.scaleOrdinal().range(colorArray)
 
 
 async function init(){
@@ -175,10 +176,10 @@ function visualiseData() {
     //createSelection();
     //console.log("layerData:")
     //console.log(layerData);
-    var width = 450
-    var height = 450
-    var margin = 10
-    var radius = Math.min(width*0.9, height*0.9) / 2 - margin
+    var width = document.querySelector('#graph-container').clientWidth;
+    var height = document.querySelector('#graph-container').clientHeight;
+    var margin = 20
+    var radius = Math.min(width*0.85, height*0.85) / 2 - margin
     d3.select("svg").remove("svg")
     // Erzeugen des Containers
     var svg = d3.select("#graph-container")
@@ -211,17 +212,21 @@ function visualiseData() {
     var sliceArcs =  d3.arc()
         .innerRadius(0.8*radius)
         .outerRadius(radius)
-    
     var arcReturn = d3.arc()
         .startAngle(0)
         .endAngle(2*Math.PI)
         .innerRadius(radius + 10)
         .outerRadius(radius * 1.1);
+    var arcReturnMouseOver = d3.arc()
+        .startAngle(0)
+        .endAngle(2*Math.PI)
+        .innerRadius(radius + 10)
+        .outerRadius(radius * 1.2);
     var arcOver = d3.arc()
         .outerRadius(radius +9 )
         .innerRadius(0.8 * radius);
     // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-    var slices = svg.selectAll('slices')
+    svg.selectAll('slices')
         .data(data_ready)
         .join('path')
         .attr('d', sliceArcs)
@@ -232,21 +237,21 @@ function visualiseData() {
         .style("stroke-width", "2px")
         .style("opacity", 0.7)
         .on("click", (event, d) => {
-            //console.log("Click-Event:")
-            //console.log(d)
+            console.log("Click-Event:")
+            console.log(d)
             if (dataStack.length > 2) {
                 //alert ("3x gespungen")
                 let switchFormButton = document.getElementById("switchButton");
                 currentForm = "Data"
                 switchFormButton.innerHTML = 'Show Visualization!';
                 d3.select("svg").remove("svg")
-                document.getElementById("my-select").style.display = 'none';
+                document.getElementById("selector-container").style.display = 'none';
                 showData();
             } else {
                 filterByKeyword(categorySelect, d.data[1][0]);
                 createSelection();
-                returnCircleColor = colorRange(d.index);
-                
+                returnCircleColor.push(colorRange(d.data[1]))
+                //console.log(d3.select(d).style('fill'))
                 var startAngle = d.startAngle;
                 var endAngle = d.startAngle + 2 * Math.PI;
                 var arcSelect = d3.arc()
@@ -254,14 +259,14 @@ function visualiseData() {
                     .endAngle(function (s){return endAngle;})
                     .innerRadius(0.8*radius)
                     .outerRadius(radius);
-                var newArc = slices.join('path').style("fill", colorRange(d.index)).attr("d", arcSelect)
+                var newArc = svg.append('path').style("fill", returnCircleColor.at(returnCircleColor.length-1)).attr("d", arcSelect).style("opacity", 1)
                 newArc.transition()
                     .duration(1000)
                     .attrTween("d", function(){
                         var newAngle = d.startAngle + 2 * Math.PI;
-                        var interpolate = d3.interpolate(newAngle, d.endAngle);
+                        var interpolate = d3.interpolate(d.endAngle, newAngle);
                         return function (tick) {
-                            console.log(newAngle + " " + interpolate(tick))
+                            //console.log(newAngle + " " + interpolate(tick))
                             endAngle = interpolate(tick);
                             return arcSelect(d);
                         };
@@ -269,21 +274,15 @@ function visualiseData() {
                 .on("end", function(){
                     visualiseData();
                 });
-                //visualiseData();  
             }})
         .on("mouseover", function () {
             //return false;
             d3.select(this).transition()
-                //.attr('fill', "#219ddb");
-                //.ease(1)
                 .duration(100)
                 .attr("d", arcOver);
         })
         .on("mouseout", function () {
-            //return false;
             d3.select(this).transition()
-                //.attr('fill', "#6791D4");
-                //.ease(1)
                 .duration(500)
                 .attr("d", sliceArcs);
         });
@@ -299,10 +298,10 @@ function visualiseData() {
         .style("font-size", 17)
         ;
         
-    //Erzeugen des inneren Kerns fürs zurückspringen    
+    //Erzeugen des äußeren Rings fürs zurückspringen    
     if (dataStack.length > 1){
         svg.append('path')
-            .style("fill", returnCircleColor)
+            .style("fill", returnCircleColor.at(returnCircleColor.length-1))
             .attr("d", arcReturn)
             .text("Ebene nach Oben")
             .style("opacity", 0.8)
@@ -312,9 +311,52 @@ function visualiseData() {
                     dataStack.pop();
                     categoriesStack.pop();
                     createSelection();
-                    visualiseData();
+                    
+                    var startAngle = 2*Math.PI;
+                    var endAngle = 0;
+                    var arcSelect = d3.arc()
+                        .startAngle(function (s){return startAngle;})
+                        .endAngle(function (s){return endAngle;})
+                        .innerRadius(0.8*radius)
+                        .outerRadius(radius);
+                    var newArc = svg.append('path').style("fill", returnCircleColor.at(returnCircleColor.length-1)).attr("d", arcSelect).style("opacity", 1)
+                    newArc.transition()
+                        .duration(1000)
+                        .attrTween("d", function(){
+                            var interpolate = d3.interpolate(2*Math.PI, 0);
+                            return function (tick) {
+                                //console.log(newAngle + " " + interpolate(tick))
+                                endAngle = interpolate(tick);
+                                return arcSelect(d);
+                            };
+                        })
+                    .on("end", function(){
+                        returnCircleColor.pop();
+                        visualiseData();
+                    });
+
+
+
+                    //visualiseData();
                 } else console.log("Die erstes Ebene existiert schon")
+            })
+            .on("mouseover", function () {
+            //return false;
+            d3.select(this).transition()
+                //.attr('fill', "#219ddb");
+                //.ease(1)
+                .duration(100)
+                .attr("d", arcReturnMouseOver);
+            })
+            .on("mouseout", function () {
+                //return false;
+                d3.select(this).transition()
+                    //.attr('fill', "#6791D4");
+                    //.ease(1)
+                    .duration(500)
+                    .attr("d", arcReturn);
             });
+
     }
 }
 
@@ -360,14 +402,6 @@ function showData(){
 	    .text(function (d) { return d.value; });
 }
 
-function updateInfo(){
-
-}
-
-function zoomIn(){
-    
-}
-
 function createSelection(){
     var i, L = document.getElementById('categorySelector').options.length - 1;
     for(i = L; i >= 0; i--) {
@@ -389,7 +423,7 @@ function createSelection(){
         // Step 3: Append the option to the select dropdown
         document.getElementById('categorySelector').appendChild(option);
     }
-    const sortArray = [["financialLoss","Financial Loss (in Million $)"],["usersAffected", "Number of Affected Users"],["incidentResolutionTime", "Incident Resolution Time (in Hours)"], ["count", "Anzahl der Vorkommnisse"]]
+    const sortArray = [["financialLoss","Financial Loss (in Million $)"],["usersAffected", "Number of Affected Users"],["incidentResolutionTime", "Incident Resolution Time (in Hours)"], ["count", "Count of attacks"]]
     for (const element of sortArray){
         // Step 1: Create the option element
         const option = document.createElement('option');
@@ -429,35 +463,16 @@ function initButton(){
             currentForm = "Data"
             switchFormButton.innerHTML = 'Show Visualization!';
             d3.select("svg").remove("svg")
-            document.getElementById("my-select").style.display = 'none';
+            document.getElementById("selector-container").style.display = 'none';
             showData();
         } else {
             currentForm = "Visual"
             switchFormButton.innerHTML = 'Show raw Data!';
             d3.select("table").remove("table")
-            document.getElementById("my-select").style.display = '';
+            document.getElementById("selector-container").style.display = 'table';
             visualiseData();
         }
     }
     
-}
-
-
-// Testfunktion
-function testFunction(){
-    d3.csv(dataFile).then(function(data){
-        console.log(data);
-        data.forEach(function(d){
-            d["financialLoss"]=parseFloat(d["Financial Loss (in Million $)"]);
-            //d["displacement(cc)"]= parseFloat(d["displacement (cc)"]);
-        });
-
-        console.log(dataNew);
-        var finanz = d3.sum(data, d => d["financialLoss"]);
-        console.log(finanz);
-        console.log(data.columns.slice(0));
-        //var countryData = d3.rollup(data, v => d3.sum(v,d => d["Financial Loss (in Million $)"]) , d => d.Country);
-        //console.log(countryData);
-    })
 }
 init();
