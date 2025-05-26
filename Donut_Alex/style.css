@@ -1,0 +1,47 @@
+
+body {
+  background: #5f6a7d;
+  font-family: sans-serif;
+}
+select {
+    cursor: pointer;
+    flex: 1 0 50%;
+}
+
+.outer-label {
+  font-size: 12px;
+  fill: #ccc;
+  text-align: center;
+}
+.center {
+  font-size: 18px;
+  text-transform: uppercase;
+  fill: #fff;
+}
+
+path {
+  cursor: pointer;
+}
+.donut-alex{
+  margin: 10;width: 100%; height: 100vh;
+}
+
+.selector-container {
+  display: grid; float: right; width: 40%; height: 90vh; text-align: center; align-items: center; justify-content: center;
+}
+
+.selector-group {
+  display: grid; gap: 1px;
+}
+
+.graph-container {
+  float: left;width: 60%; height: 90vh;
+}
+
+.data-container {
+  display: none; height: 90vh;justify-content: center;
+}
+
+.switchButton-div {
+  height: 10vh; width: 98%;
+}
