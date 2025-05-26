@@ -1,0 +1,2106 @@
+{
+  "name": "Cyber Threats",
+  "children": [
+    {
+      "name": "Australia",
+      "children": [
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 576.59
+            },
+            {
+              "name": "Education",
+              "value": 739.49
+            },
+            {
+              "name": "Government",
+              "value": 338.81
+            },
+            {
+              "name": "Healthcare",
+              "value": 424.06
+            },
+            {
+              "name": "IT",
+              "value": 209.13
+            },
+            {
+              "name": "Retail",
+              "value": 327.01
+            },
+            {
+              "name": "Telecommunications",
+              "value": 296.76
+            }
+          ],
+          "value": 51
+        },
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 377.65
+            },
+            {
+              "name": "Education",
+              "value": 541.74
+            },
+            {
+              "name": "Government",
+              "value": 489.89
+            },
+            {
+              "name": "Healthcare",
+              "value": 477.68
+            },
+            {
+              "name": "IT",
+              "value": 678.64
+            },
+            {
+              "name": "Retail",
+              "value": 200.75
+            },
+            {
+              "name": "Telecommunications",
+              "value": 305.18
+            }
+          ],
+          "value": 61
+        },
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 283.23
+            },
+            {
+              "name": "Education",
+              "value": 117.7
+            },
+            {
+              "name": "Government",
+              "value": 126.53
+            },
+            {
+              "name": "Healthcare",
+              "value": 233.48
+            },
+            {
+              "name": "IT",
+              "value": 372.16
+            },
+            {
+              "name": "Retail",
+              "value": 412.65
+            },
+            {
+              "name": "Telecommunications",
+              "value": 293.74
+            }
+          ],
+          "value": 39
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 351.73
+            },
+            {
+              "name": "Education",
+              "value": 313.6
+            },
+            {
+              "name": "Government",
+              "value": 317.2
+            },
+            {
+              "name": "Healthcare",
+              "value": 644.53
+            },
+            {
+              "name": "IT",
+              "value": 283.67
+            },
+            {
+              "name": "Retail",
+              "value": 494.61
+            },
+            {
+              "name": "Telecommunications",
+              "value": 620.83
+            }
+          ],
+          "value": 61
+        },
+        {
+          "name": "Man-in-the-Middle",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 476.39
+            },
+            {
+              "name": "Education",
+              "value": 144.96
+            },
+            {
+              "name": "Government",
+              "value": 289.05
+            },
+            {
+              "name": "Healthcare",
+              "value": 628.69
+            },
+            {
+              "name": "IT",
+              "value": 328.63
+            },
+            {
+              "name": "Retail",
+              "value": 385.87
+            },
+            {
+              "name": "Telecommunications",
+              "value": 281.3
+            }
+          ],
+          "value": 45
+        },
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 220.22
+            },
+            {
+              "name": "Education",
+              "value": 386.42
+            },
+            {
+              "name": "Government",
+              "value": 380.43
+            },
+            {
+              "name": "Healthcare",
+              "value": 400.26
+            },
+            {
+              "name": "IT",
+              "value": 139.41
+            },
+            {
+              "name": "Retail",
+              "value": 215.29
+            },
+            {
+              "name": "Telecommunications",
+              "value": 277.04
+            }
+          ],
+          "value": 40
+        }
+      ],
+      "value": 297
+    },
+    {
+      "name": "Brazil",
+      "children": [
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 308.04
+            },
+            {
+              "name": "Education",
+              "value": 253.26
+            },
+            {
+              "name": "Government",
+              "value": 320.05
+            },
+            {
+              "name": "Healthcare",
+              "value": 406.0
+            },
+            {
+              "name": "IT",
+              "value": 283.37
+            },
+            {
+              "name": "Retail",
+              "value": 367.26
+            },
+            {
+              "name": "Telecommunications",
+              "value": 214.62
+            }
+          ],
+          "value": 43
+        },
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 346.94
+            },
+            {
+              "name": "Education",
+              "value": 457.63
+            },
+            {
+              "name": "Government",
+              "value": 437.34
+            },
+            {
+              "name": "Healthcare",
+              "value": 452.53
+            },
+            {
+              "name": "IT",
+              "value": 387.39
+            },
+            {
+              "name": "Retail",
+              "value": 373.35
+            },
+            {
+              "name": "Telecommunications",
+              "value": 628.48
+            }
+          ],
+          "value": 61
+        },
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 569.29
+            },
+            {
+              "name": "Education",
+              "value": 484.73
+            },
+            {
+              "name": "Government",
+              "value": 386.15
+            },
+            {
+              "name": "Healthcare",
+              "value": 363.86
+            },
+            {
+              "name": "IT",
+              "value": 532.16
+            },
+            {
+              "name": "Retail",
+              "value": 311.32
+            },
+            {
+              "name": "Telecommunications",
+              "value": 286.98
+            }
+          ],
+          "value": 54
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 352.82
+            },
+            {
+              "name": "Education",
+              "value": 247.16
+            },
+            {
+              "name": "Government",
+              "value": 349.08
+            },
+            {
+              "name": "Healthcare",
+              "value": 518.89
+            },
+            {
+              "name": "IT",
+              "value": 353.26
+            },
+            {
+              "name": "Retail",
+              "value": 433.92
+            },
+            {
+              "name": "Telecommunications",
+              "value": 302.08
+            }
+          ],
+          "value": 51
+        },
+        {
+          "name": "Man-in-the-Middle",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 369.21
+            },
+            {
+              "name": "Education",
+              "value": 427.05
+            },
+            {
+              "name": "Government",
+              "value": 191.68
+            },
+            {
+              "name": "Healthcare",
+              "value": 233.21
+            },
+            {
+              "name": "IT",
+              "value": 357.96
+            },
+            {
+              "name": "Retail",
+              "value": 420.6
+            },
+            {
+              "name": "Telecommunications",
+              "value": 161.21
+            }
+          ],
+          "value": 44
+        },
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 345.72
+            },
+            {
+              "name": "Education",
+              "value": 579.68
+            },
+            {
+              "name": "Government",
+              "value": 65.59
+            },
+            {
+              "name": "Healthcare",
+              "value": 634.92
+            },
+            {
+              "name": "IT",
+              "value": 660.95
+            },
+            {
+              "name": "Retail",
+              "value": 417.35
+            },
+            {
+              "name": "Telecommunications",
+              "value": 189.53
+            }
+          ],
+          "value": 57
+        }
+      ],
+      "value": 310
+    },
+    {
+      "name": "China",
+      "children": [
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 210.64
+            },
+            {
+              "name": "Education",
+              "value": 266.36
+            },
+            {
+              "name": "Government",
+              "value": 307.15
+            },
+            {
+              "name": "Healthcare",
+              "value": 281.23
+            },
+            {
+              "name": "IT",
+              "value": 294.07
+            },
+            {
+              "name": "Retail",
+              "value": 466.08
+            },
+            {
+              "name": "Telecommunications",
+              "value": 318.21
+            }
+          ],
+          "value": 49
+        },
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 341.53
+            },
+            {
+              "name": "Education",
+              "value": 381.6
+            },
+            {
+              "name": "Government",
+              "value": 487.66
+            },
+            {
+              "name": "Healthcare",
+              "value": 264.66
+            },
+            {
+              "name": "IT",
+              "value": 535.8
+            },
+            {
+              "name": "Retail",
+              "value": 192.81
+            },
+            {
+              "name": "Telecommunications",
+              "value": 362.11
+            }
+          ],
+          "value": 51
+        },
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 235.98
+            },
+            {
+              "name": "Education",
+              "value": 156.54
+            },
+            {
+              "name": "Government",
+              "value": 242.61
+            },
+            {
+              "name": "Healthcare",
+              "value": 477.59
+            },
+            {
+              "name": "IT",
+              "value": 442.28
+            },
+            {
+              "name": "Retail",
+              "value": 185.08
+            },
+            {
+              "name": "Telecommunications",
+              "value": 341.59
+            }
+          ],
+          "value": 45
+        },
+        {
+          "name": "Man-in-the-Middle",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 515.71
+            },
+            {
+              "name": "Education",
+              "value": 337.12
+            },
+            {
+              "name": "Government",
+              "value": 117.62
+            },
+            {
+              "name": "Healthcare",
+              "value": 131.98
+            },
+            {
+              "name": "IT",
+              "value": 319.66
+            },
+            {
+              "name": "Retail",
+              "value": 292.75
+            },
+            {
+              "name": "Telecommunications",
+              "value": 266.38
+            }
+          ],
+          "value": 44
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 182.62
+            },
+            {
+              "name": "Education",
+              "value": 670.99
+            },
+            {
+              "name": "Government",
+              "value": 193.01
+            },
+            {
+              "name": "Healthcare",
+              "value": 364.68
+            },
+            {
+              "name": "IT",
+              "value": 325.54
+            },
+            {
+              "name": "Retail",
+              "value": 265.16
+            },
+            {
+              "name": "Telecommunications",
+              "value": 274.29
+            }
+          ],
+          "value": 44
+        },
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 301.56
+            },
+            {
+              "name": "Education",
+              "value": 435.35
+            },
+            {
+              "name": "Government",
+              "value": 380.7
+            },
+            {
+              "name": "Healthcare",
+              "value": 553.5
+            },
+            {
+              "name": "IT",
+              "value": 375.77
+            },
+            {
+              "name": "Retail",
+              "value": 118.14
+            },
+            {
+              "name": "Telecommunications",
+              "value": 500.36
+            }
+          ],
+          "value": 48
+        }
+      ],
+      "value": 281
+    },
+    {
+      "name": "France",
+      "children": [
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 367.35
+            },
+            {
+              "name": "Education",
+              "value": 256.06
+            },
+            {
+              "name": "Government",
+              "value": 607.74
+            },
+            {
+              "name": "Healthcare",
+              "value": 542.67
+            },
+            {
+              "name": "IT",
+              "value": 335.26
+            },
+            {
+              "name": "Retail",
+              "value": 221.98
+            },
+            {
+              "name": "Telecommunications",
+              "value": 193.05
+            }
+          ],
+          "value": 55
+        },
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 370.84
+            },
+            {
+              "name": "Education",
+              "value": 227.05
+            },
+            {
+              "name": "Government",
+              "value": 509.65
+            },
+            {
+              "name": "Healthcare",
+              "value": 340.46
+            },
+            {
+              "name": "IT",
+              "value": 357.64
+            },
+            {
+              "name": "Retail",
+              "value": 368.43
+            },
+            {
+              "name": "Telecommunications",
+              "value": 330.91
+            }
+          ],
+          "value": 50
+        },
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 419.41
+            },
+            {
+              "name": "Education",
+              "value": 359.04
+            },
+            {
+              "name": "Government",
+              "value": 260.91
+            },
+            {
+              "name": "Healthcare",
+              "value": 352.62
+            },
+            {
+              "name": "IT",
+              "value": 630.92
+            },
+            {
+              "name": "Retail",
+              "value": 386.24
+            },
+            {
+              "name": "Telecommunications",
+              "value": 248.08
+            }
+          ],
+          "value": 51
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 210.86
+            },
+            {
+              "name": "Education",
+              "value": 189.5
+            },
+            {
+              "name": "Government",
+              "value": 233.28
+            },
+            {
+              "name": "Healthcare",
+              "value": 501.94
+            },
+            {
+              "name": "IT",
+              "value": 536.02
+            },
+            {
+              "name": "Retail",
+              "value": 274.79
+            },
+            {
+              "name": "Telecommunications",
+              "value": 277.53
+            }
+          ],
+          "value": 47
+        },
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 607.97
+            },
+            {
+              "name": "Education",
+              "value": 324.27
+            },
+            {
+              "name": "Government",
+              "value": 335.41
+            },
+            {
+              "name": "Healthcare",
+              "value": 406.7
+            },
+            {
+              "name": "IT",
+              "value": 608.69
+            },
+            {
+              "name": "Retail",
+              "value": 793.79
+            },
+            {
+              "name": "Telecommunications",
+              "value": 94.04
+            }
+          ],
+          "value": 64
+        },
+        {
+          "name": "Man-in-the-Middle",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 60.43
+            },
+            {
+              "name": "Education",
+              "value": 372.67
+            },
+            {
+              "name": "Government",
+              "value": 129.88
+            },
+            {
+              "name": "Healthcare",
+              "value": 300.78
+            },
+            {
+              "name": "IT",
+              "value": 358.78
+            },
+            {
+              "name": "Retail",
+              "value": 388.99
+            },
+            {
+              "name": "Telecommunications",
+              "value": 279.65
+            }
+          ],
+          "value": 38
+        }
+      ],
+      "value": 305
+    },
+    {
+      "name": "Germany",
+      "children": [
+        {
+          "name": "Man-in-the-Middle",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 565.35
+            },
+            {
+              "name": "Education",
+              "value": 134.22
+            },
+            {
+              "name": "Government",
+              "value": 399.4
+            },
+            {
+              "name": "Healthcare",
+              "value": 410.15
+            },
+            {
+              "name": "IT",
+              "value": 699.02
+            },
+            {
+              "name": "Retail",
+              "value": 533.82
+            },
+            {
+              "name": "Telecommunications",
+              "value": 244.08
+            }
+          ],
+          "value": 49
+        },
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 408.3
+            },
+            {
+              "name": "Education",
+              "value": 98.61
+            },
+            {
+              "name": "Government",
+              "value": 146.63
+            },
+            {
+              "name": "Healthcare",
+              "value": 138.08
+            },
+            {
+              "name": "IT",
+              "value": 701.08
+            },
+            {
+              "name": "Retail",
+              "value": 148.79
+            },
+            {
+              "name": "Telecommunications",
+              "value": 547.43
+            }
+          ],
+          "value": 43
+        },
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 140.44
+            },
+            {
+              "name": "Education",
+              "value": 365.95
+            },
+            {
+              "name": "Government",
+              "value": 368.32
+            },
+            {
+              "name": "Healthcare",
+              "value": 418.65
+            },
+            {
+              "name": "IT",
+              "value": 303.28
+            },
+            {
+              "name": "Retail",
+              "value": 316.4
+            },
+            {
+              "name": "Telecommunications",
+              "value": 356.15
+            }
+          ],
+          "value": 46
+        },
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 413.54
+            },
+            {
+              "name": "Education",
+              "value": 166.28
+            },
+            {
+              "name": "Government",
+              "value": 523.2
+            },
+            {
+              "name": "Healthcare",
+              "value": 508.93
+            },
+            {
+              "name": "IT",
+              "value": 42.39
+            },
+            {
+              "name": "Retail",
+              "value": 372.61
+            },
+            {
+              "name": "Telecommunications",
+              "value": 369.68
+            }
+          ],
+          "value": 46
+        },
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 561.1
+            },
+            {
+              "name": "Education",
+              "value": 556.84
+            },
+            {
+              "name": "Government",
+              "value": 420.73
+            },
+            {
+              "name": "Healthcare",
+              "value": 440.17
+            },
+            {
+              "name": "IT",
+              "value": 381.39
+            },
+            {
+              "name": "Retail",
+              "value": 574.96
+            },
+            {
+              "name": "Telecommunications",
+              "value": 291.19
+            }
+          ],
+          "value": 62
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 534.13
+            },
+            {
+              "name": "Education",
+              "value": 75.2
+            },
+            {
+              "name": "Government",
+              "value": 733.64
+            },
+            {
+              "name": "Healthcare",
+              "value": 440.55
+            },
+            {
+              "name": "IT",
+              "value": 128.99
+            },
+            {
+              "name": "Retail",
+              "value": 315.99
+            },
+            {
+              "name": "Telecommunications",
+              "value": 497.58
+            }
+          ],
+          "value": 45
+        }
+      ],
+      "value": 291
+    },
+    {
+      "name": "India",
+      "children": [
+        {
+          "name": "Man-in-the-Middle",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 405.67
+            },
+            {
+              "name": "Education",
+              "value": 157.29
+            },
+            {
+              "name": "Government",
+              "value": 284.85
+            },
+            {
+              "name": "Healthcare",
+              "value": 317.82
+            },
+            {
+              "name": "IT",
+              "value": 511.6
+            },
+            {
+              "name": "Retail",
+              "value": 278.74
+            },
+            {
+              "name": "Telecommunications",
+              "value": 420.09
+            }
+          ],
+          "value": 46
+        },
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 523.28
+            },
+            {
+              "name": "Education",
+              "value": 448.23
+            },
+            {
+              "name": "Government",
+              "value": 339.6
+            },
+            {
+              "name": "Healthcare",
+              "value": 305.87
+            },
+            {
+              "name": "IT",
+              "value": 451.08
+            },
+            {
+              "name": "Retail",
+              "value": 459.81
+            },
+            {
+              "name": "Telecommunications",
+              "value": 150.77
+            }
+          ],
+          "value": 59
+        },
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 509.06
+            },
+            {
+              "name": "Education",
+              "value": 434.68
+            },
+            {
+              "name": "Government",
+              "value": 432.36
+            },
+            {
+              "name": "Healthcare",
+              "value": 122.38
+            },
+            {
+              "name": "IT",
+              "value": 306.29
+            },
+            {
+              "name": "Retail",
+              "value": 257.38
+            },
+            {
+              "name": "Telecommunications",
+              "value": 237.28
+            }
+          ],
+          "value": 50
+        },
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 334.75
+            },
+            {
+              "name": "Education",
+              "value": 361.79
+            },
+            {
+              "name": "Government",
+              "value": 710.6
+            },
+            {
+              "name": "Healthcare",
+              "value": 251.77
+            },
+            {
+              "name": "IT",
+              "value": 479.32
+            },
+            {
+              "name": "Retail",
+              "value": 152.76
+            },
+            {
+              "name": "Telecommunications",
+              "value": 510.82
+            }
+          ],
+          "value": 55
+        },
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 405.57
+            },
+            {
+              "name": "Education",
+              "value": 122.2
+            },
+            {
+              "name": "Government",
+              "value": 135.76
+            },
+            {
+              "name": "Healthcare",
+              "value": 243.17
+            },
+            {
+              "name": "IT",
+              "value": 675.61
+            },
+            {
+              "name": "Retail",
+              "value": 524.46
+            },
+            {
+              "name": "Telecommunications",
+              "value": 206.41
+            }
+          ],
+          "value": 51
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 118.12
+            },
+            {
+              "name": "Education",
+              "value": 480.19
+            },
+            {
+              "name": "Government",
+              "value": 311.83
+            },
+            {
+              "name": "Healthcare",
+              "value": 390.45
+            },
+            {
+              "name": "IT",
+              "value": 299.62
+            },
+            {
+              "name": "Retail",
+              "value": 219.0
+            },
+            {
+              "name": "Telecommunications",
+              "value": 277.79
+            }
+          ],
+          "value": 47
+        }
+      ],
+      "value": 308
+    },
+    {
+      "name": "Japan",
+      "children": [
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 789.68
+            },
+            {
+              "name": "Education",
+              "value": 461.92
+            },
+            {
+              "name": "Government",
+              "value": 424.53
+            },
+            {
+              "name": "Healthcare",
+              "value": 346.34
+            },
+            {
+              "name": "IT",
+              "value": 498.78
+            },
+            {
+              "name": "Retail",
+              "value": 273.4
+            },
+            {
+              "name": "Telecommunications",
+              "value": 346.71
+            }
+          ],
+          "value": 57
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 72.29
+            },
+            {
+              "name": "Education",
+              "value": 391.1
+            },
+            {
+              "name": "Government",
+              "value": 105.57
+            },
+            {
+              "name": "Healthcare",
+              "value": 288.11
+            },
+            {
+              "name": "IT",
+              "value": 293.93
+            },
+            {
+              "name": "Retail",
+              "value": 377.26
+            },
+            {
+              "name": "Telecommunications",
+              "value": 566.3
+            }
+          ],
+          "value": 49
+        },
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 238.81
+            },
+            {
+              "name": "Education",
+              "value": 236.51
+            },
+            {
+              "name": "Government",
+              "value": 334.54
+            },
+            {
+              "name": "Healthcare",
+              "value": 190.1
+            },
+            {
+              "name": "IT",
+              "value": 419.95
+            },
+            {
+              "name": "Retail",
+              "value": 620.88
+            },
+            {
+              "name": "Telecommunications",
+              "value": 84.65
+            }
+          ],
+          "value": 41
+        },
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 459.2
+            },
+            {
+              "name": "Education",
+              "value": 357.55
+            },
+            {
+              "name": "Government",
+              "value": 316.75
+            },
+            {
+              "name": "Healthcare",
+              "value": 213.94
+            },
+            {
+              "name": "IT",
+              "value": 468.74
+            },
+            {
+              "name": "Retail",
+              "value": 453.05
+            },
+            {
+              "name": "Telecommunications",
+              "value": 425.0
+            }
+          ],
+          "value": 54
+        },
+        {
+          "name": "Man-in-the-Middle",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 284.2
+            },
+            {
+              "name": "Education",
+              "value": 320.07
+            },
+            {
+              "name": "Government",
+              "value": 321.64
+            },
+            {
+              "name": "Healthcare",
+              "value": 274.94
+            },
+            {
+              "name": "IT",
+              "value": 378.0
+            },
+            {
+              "name": "Retail",
+              "value": 474.6
+            },
+            {
+              "name": "Telecommunications",
+              "value": 572.78
+            }
+          ],
+          "value": 55
+        },
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 248.12
+            },
+            {
+              "name": "Education",
+              "value": 419.56
+            },
+            {
+              "name": "Government",
+              "value": 361.87
+            },
+            {
+              "name": "Healthcare",
+              "value": 525.2
+            },
+            {
+              "name": "IT",
+              "value": 347.41
+            },
+            {
+              "name": "Retail",
+              "value": 192.66
+            },
+            {
+              "name": "Telecommunications",
+              "value": 420.7
+            }
+          ],
+          "value": 49
+        }
+      ],
+      "value": 305
+    },
+    {
+      "name": "Russia",
+      "children": [
+        {
+          "name": "Man-in-the-Middle",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 443.51
+            },
+            {
+              "name": "Education",
+              "value": 433.21
+            },
+            {
+              "name": "Government",
+              "value": 348.09
+            },
+            {
+              "name": "Healthcare",
+              "value": 132.42
+            },
+            {
+              "name": "IT",
+              "value": 667.57
+            },
+            {
+              "name": "Retail",
+              "value": 230.59
+            },
+            {
+              "name": "Telecommunications",
+              "value": 215.79
+            }
+          ],
+          "value": 49
+        },
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 498.64
+            },
+            {
+              "name": "Education",
+              "value": 360.54
+            },
+            {
+              "name": "Government",
+              "value": 397.73
+            },
+            {
+              "name": "Healthcare",
+              "value": 464.27
+            },
+            {
+              "name": "IT",
+              "value": 368.61
+            },
+            {
+              "name": "Retail",
+              "value": 344.24
+            },
+            {
+              "name": "Telecommunications",
+              "value": 491.24
+            }
+          ],
+          "value": 54
+        },
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 450.66
+            },
+            {
+              "name": "Education",
+              "value": 263.56
+            },
+            {
+              "name": "Government",
+              "value": 425.43
+            },
+            {
+              "name": "Healthcare",
+              "value": 332.47
+            },
+            {
+              "name": "IT",
+              "value": 158.32
+            },
+            {
+              "name": "Retail",
+              "value": 124.36
+            },
+            {
+              "name": "Telecommunications",
+              "value": 510.59
+            }
+          ],
+          "value": 49
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 331.69
+            },
+            {
+              "name": "Education",
+              "value": 283.72
+            },
+            {
+              "name": "Government",
+              "value": 353.87
+            },
+            {
+              "name": "Healthcare",
+              "value": 297.5
+            },
+            {
+              "name": "IT",
+              "value": 491.62
+            },
+            {
+              "name": "Retail",
+              "value": 222.93
+            },
+            {
+              "name": "Telecommunications",
+              "value": 464.82
+            }
+          ],
+          "value": 46
+        },
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 465.05
+            },
+            {
+              "name": "Education",
+              "value": 516.6
+            },
+            {
+              "name": "Government",
+              "value": 263.08
+            },
+            {
+              "name": "Healthcare",
+              "value": 358.39
+            },
+            {
+              "name": "IT",
+              "value": 343.1
+            },
+            {
+              "name": "Retail",
+              "value": 324.98
+            },
+            {
+              "name": "Telecommunications",
+              "value": 588.04
+            }
+          ],
+          "value": 58
+        },
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 431.4
+            },
+            {
+              "name": "Education",
+              "value": 357.1
+            },
+            {
+              "name": "Government",
+              "value": 212.02
+            },
+            {
+              "name": "Healthcare",
+              "value": 42.8
+            },
+            {
+              "name": "IT",
+              "value": 255.73
+            },
+            {
+              "name": "Retail",
+              "value": 202.23
+            },
+            {
+              "name": "Telecommunications",
+              "value": 266.22
+            }
+          ],
+          "value": 39
+        }
+      ],
+      "value": 295
+    },
+    {
+      "name": "UK",
+      "children": [
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 580.08
+            },
+            {
+              "name": "Education",
+              "value": 164.61
+            },
+            {
+              "name": "Government",
+              "value": 440.08
+            },
+            {
+              "name": "Healthcare",
+              "value": 343.16
+            },
+            {
+              "name": "IT",
+              "value": 473.19
+            },
+            {
+              "name": "Retail",
+              "value": 288.05
+            },
+            {
+              "name": "Telecommunications",
+              "value": 202.25
+            }
+          ],
+          "value": 51
+        },
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 425.43
+            },
+            {
+              "name": "Education",
+              "value": 463.08
+            },
+            {
+              "name": "Government",
+              "value": 380.15
+            },
+            {
+              "name": "Healthcare",
+              "value": 347.06
+            },
+            {
+              "name": "IT",
+              "value": 463.14
+            },
+            {
+              "name": "Retail",
+              "value": 456.86
+            },
+            {
+              "name": "Telecommunications",
+              "value": 607.48
+            }
+          ],
+          "value": 55
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 307.03
+            },
+            {
+              "name": "Education",
+              "value": 429.78
+            },
+            {
+              "name": "Government",
+              "value": 332.29
+            },
+            {
+              "name": "Healthcare",
+              "value": 421.39
+            },
+            {
+              "name": "IT",
+              "value": 518.85
+            },
+            {
+              "name": "Retail",
+              "value": 185.7
+            },
+            {
+              "name": "Telecommunications",
+              "value": 333.67
+            }
+          ],
+          "value": 53
+        },
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 407.49
+            },
+            {
+              "name": "Education",
+              "value": 180.76
+            },
+            {
+              "name": "Government",
+              "value": 377.21
+            },
+            {
+              "name": "Healthcare",
+              "value": 272.33
+            },
+            {
+              "name": "IT",
+              "value": 543.37
+            },
+            {
+              "name": "Retail",
+              "value": 422.41
+            },
+            {
+              "name": "Telecommunications",
+              "value": 476.13
+            }
+          ],
+          "value": 49
+        },
+        {
+          "name": "MITM",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 365.92
+            },
+            {
+              "name": "Education",
+              "value": 195.41
+            },
+            {
+              "name": "Government",
+              "value": 652.2
+            },
+            {
+              "name": "Healthcare",
+              "value": 230.59
+            },
+            {
+              "name": "IT",
+              "value": 469.19
+            },
+            {
+              "name": "Retail",
+              "value": 68.51
+            },
+            {
+              "name": "Telecommunications",
+              "value": 549.81
+            }
+          ],
+          "value": 49
+        },
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 683.99
+            },
+            {
+              "name": "Education",
+              "value": 183.35
+            },
+            {
+              "name": "Government",
+              "value": 372.74
+            },
+            {
+              "name": "Healthcare",
+              "value": 382.29
+            },
+            {
+              "name": "IT",
+              "value": 599.85
+            },
+            {
+              "name": "Retail",
+              "value": 626.19
+            },
+            {
+              "name": "Telecommunications",
+              "value": 279.92
+            }
+          ],
+          "value": 64
+        }
+      ],
+      "value": 321
+    },
+    {
+      "name": "USA",
+      "children": [
+        {
+          "name": "DDoS",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 458.22
+            },
+            {
+              "name": "Education",
+              "value": 412.0
+            },
+            {
+              "name": "Government",
+              "value": 505.18
+            },
+            {
+              "name": "Healthcare",
+              "value": 379.04
+            },
+            {
+              "name": "IT",
+              "value": 732.91
+            },
+            {
+              "name": "Retail",
+              "value": 404.16
+            },
+            {
+              "name": "Telecommunications",
+              "value": 341.52
+            }
+          ],
+          "value": 60
+        },
+        {
+          "name": "Ransomware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 207.84
+            },
+            {
+              "name": "Education",
+              "value": 287.91
+            },
+            {
+              "name": "Government",
+              "value": 466.78
+            },
+            {
+              "name": "Healthcare",
+              "value": 521.77
+            },
+            {
+              "name": "IT",
+              "value": 322.19
+            },
+            {
+              "name": "Retail",
+              "value": 421.7
+            },
+            {
+              "name": "Telecommunications",
+              "value": 432.14
+            }
+          ],
+          "value": 53
+        },
+        {
+          "name": "Malware",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 198.91
+            },
+            {
+              "name": "Education",
+              "value": 270.08
+            },
+            {
+              "name": "Government",
+              "value": 335.0
+            },
+            {
+              "name": "Healthcare",
+              "value": 245.61
+            },
+            {
+              "name": "IT",
+              "value": 179.97
+            },
+            {
+              "name": "Retail",
+              "value": 557.83
+            },
+            {
+              "name": "Telecommunications",
+              "value": 204.46
+            }
+          ],
+          "value": 42
+        },
+        {
+          "name": "SQL Injection",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 292.01
+            },
+            {
+              "name": "Education",
+              "value": 345.07
+            },
+            {
+              "name": "Government",
+              "value": 480.64
+            },
+            {
+              "name": "Healthcare",
+              "value": 248.3
+            },
+            {
+              "name": "IT",
+              "value": 151.79
+            },
+            {
+              "name": "Retail",
+              "value": 314.06
+            },
+            {
+              "name": "Telecommunications",
+              "value": 318.17
+            }
+          ],
+          "value": 38
+        },
+        {
+          "name": "Phishing",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 457.18
+            },
+            {
+              "name": "Education",
+              "value": 339.51
+            },
+            {
+              "name": "Government",
+              "value": 480.71
+            },
+            {
+              "name": "Healthcare",
+              "value": 181.21
+            },
+            {
+              "name": "IT",
+              "value": 646.08
+            },
+            {
+              "name": "Retail",
+              "value": 532.18
+            },
+            {
+              "name": "Telecommunications",
+              "value": 148.47
+            }
+          ],
+          "value": 54
+        },
+        {
+          "name": "Man-in-the-Middle",
+          "children": [
+            {
+              "name": "Banking",
+              "value": 353.0
+            },
+            {
+              "name": "Education",
+              "value": 326.98
+            },
+            {
+              "name": "Government",
+              "value": 212.89
+            },
+            {
+              "name": "Healthcare",
+              "value": 77.15
+            },
+            {
+              "name": "IT",
+              "value": 330.71
+            },
+            {
+              "name": "Retail",
+              "value": 531.78
+            },
+            {
+              "name": "Telecommunications",
+              "value": 159.01
+            }
+          ],
+          "value": 40
+        }
+      ],
+      "value": 287
+    }
+  ],
+  "value": 3001
+}
