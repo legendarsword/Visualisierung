@@ -8,7 +8,8 @@ var categorySelect;
 var currentForm = "Visual";
 var returnCircleColor = [];
 // set the color scale
-const colorRange = d3.scaleOrdinal().range(["#ffb822","#00bf8c","#219ddb","#ad85cc","#f95275","#80B647","#11AEB4","#6791D4","#D36CA1","#FC803B"])
+const colorArray = ["#ffb822","#00bf8c","#219ddb","#ad85cc","#f95275","#80B647","#11AEB4","#6791D4","#D36CA1","#FC803B"]
+const colorRange = d3.scaleOrdinal().range(colorArray)
 
 
 async function init(){
@@ -20,8 +21,6 @@ async function init(){
     createSelection();
     initButton();
     visualiseData();
-
-
 }
 
 async function initializeData(){
