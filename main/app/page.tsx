@@ -19,7 +19,7 @@ export default function Home() {
       <section className={styles.finantial_loss} id="finantial_loss">
         <div className={styles.container}>
           <div className={styles.finantial_loss__header}>
-            <h1 className={styles.finantial_loss__title}>Finantial Loss by Year</h1>
+            <h1 className={styles.finantial_loss__title}>Financial Loss by Year</h1>
             <label className={styles.finantial_loss__label} id="yearLabel"></label>
             <FinancialMap/>
           </div>
@@ -35,13 +35,11 @@ export default function Home() {
         </div>
       </section>
       
-      <section id="donut_attaks">
+      <section className={styles.barchart_attaks} id="donut_attaks">
         <div className={styles.container}>
-          <div className={styles.barchart_attaks__header}>
             <h1 className={styles.barchart_attaks__title}>Donut Chart</h1>
               <Donut/>
           </div>
-        </div>
       </section>
     </main>
   );

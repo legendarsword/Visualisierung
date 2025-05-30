@@ -12,9 +12,10 @@ export const Donut = () => {
         const returnCircleColor: string[] = [];
         const colorArray: string[] = ["#ffb822","#00bf8c","#219ddb","#ad85cc","#f95275","#80B647","#11AEB4","#6791D4","#D36CA1","#FC803B"];
         const colorRange: d3.ScaleOrdinal<string, unknown> = d3.scaleOrdinal().range(colorArray);
+        const wordColor: string = "#d1d5dc"
 
         async function init(): Promise<void> {
-            let promise: Promise<string> = await initializeData();
+            let promise = await initializeData();
             await promise;
             createSelection();
             initButton();
@@ -193,22 +194,12 @@ export const Donut = () => {
             //console.log("data_ready: ")
             //console.log(data_ready)
             //Erzeugen des Daten Donuts
-            var label = d3.arc()
-                .innerRadius(0.8*radius)
-                .outerRadius(radius)
+            var labelArc = d3.arc()
+                .innerRadius(radius*0.5)
+                .outerRadius(radius*0.85)
             var sliceArcs =  d3.arc()
                 .innerRadius(0.8*radius)
                 .outerRadius(radius)
-            var arcReturn = d3.arc()
-                .startAngle(0)
-                .endAngle(2*Math.PI)
-                .innerRadius(radius + 10)
-                .outerRadius(radius * 1.1);
-            var arcReturnMouseOver = d3.arc()
-                .startAngle(0)
-                .endAngle(2*Math.PI)
-                .innerRadius(radius + 10)
-                .outerRadius(radius * 1.2);
             var arcOver = d3.arc()
                 .outerRadius(radius +9 )
                 .innerRadius(0.8 * radius);
@@ -239,7 +230,7 @@ export const Donut = () => {
                         filterByKeyword(categorySelect, d.data[1][0]);
                         createSelection();
                         returnCircleColor.push(colorRange(d.data[1]))
-                        //console.log(d3.select(d).style('fill'))
+                        svg.selectAll('slices').selectAll('text').remove();
                         var startAngle = d.startAngle;
                         var endAngle = d.startAngle + 2 * Math.PI;
                         var arcSelect = d3.arc()
@@ -274,18 +265,31 @@ export const Donut = () => {
                         .duration(500)
                         .attr("d", sliceArcs);
                 });
-                
+            
+            
             // Erzeugen der Beschriftung
             svg.selectAll('slices')
                 .data(data_ready)
                 .enter()
                 .append('text')
                 .text(function(d){ return d.data[1][0]})
-                .attr("transform", function(d) { return "translate(" + label.centroid(d) + ")";  })
+                .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")";  })
                 .style("text-anchor", "middle")
-                .style("font-size", 17)
+                .style("font-size", 12)
+                .attr("fill", "#d1d5dc")
                 ;
-                
+            
+            var arcReturn = d3.arc()
+                .startAngle(0)
+                .endAngle(2*Math.PI)
+                .innerRadius(radius + 10)
+                .outerRadius(radius * 1.1);
+            var arcReturnMouseOver = d3.arc()
+                .startAngle(0)
+                .endAngle(2*Math.PI)
+                .innerRadius(radius + 10)
+                .outerRadius(radius * 1.2);
+            
             //Erzeugen des äußeren Rings fürs zurückspringen    
             if (dataStack.length > 1){
                 svg.append('path')
@@ -369,6 +373,7 @@ export const Donut = () => {
                 .style("border-collapse", "collapse")
                 .style("border", "2px black solid")
                 .append("g")
+                .attr("fill", wordColor)
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
             var thead = table.append('thead')
             var tbody = table.append("tbody")
@@ -387,6 +392,13 @@ export const Donut = () => {
             .data(dataStack.at(dataStack.length -1))
             .enter()
             .append('tr')
+                .on("mouseover", function () {
+                    //return false;
+                    d3.select(this).style("background-color", "#0c1012").style("opacity", 0.1).style("color", wordColor).style("opacity", 1);
+                })
+                .on("mouseout", function () {
+                    d3.select(this).style("background-color", "#374753").style("opacity", 1).style("color", wordColor).style("opacity", 1);
+                });
             ;
             // create a cell in each row for each column
             var cells = rows.selectAll('td')
@@ -455,7 +467,7 @@ export const Donut = () => {
         }
 
         function initButton(): void {
-        let switchFormButton = document.getElementById("switchButton");
+            let switchFormButton = document.getElementById("switchButton");
             //console.log(switchFormButton)
             switchFormButton.innerHTML = 'Show raw Data!';
             switchFormButton.onclick = function(){
@@ -480,20 +492,19 @@ export const Donut = () => {
 
 }, [])
     return (
-        <div id="donut-div">
+        <div id="donut-div" className='justify-center items-center'>
             <div id="viz-container" className="grid grid-cols-2 gap-4">
                 <div id="graph-container" className="p-4 rounded"></div>
                 <div id="selector-container" className="p-4 rounded flex flex-col justify-center items-center">
-                        <p className="text-sm">Chosen Category:</p>
-                        <select name="categorySelector" id="categorySelector" className="border rounded p-2"></select>
-                        <p className="text-sm">Chosen Dataview:</p>
-                        <select name="sortSelector" id="sortSelector" className="border rounded p-2"></select>
+                        <p className="text-sm text-gray-300">Chosen Category:</p>
+                        <select name="categorySelector" id="categorySelector" className="border rounded p-2 text-gray-300 bg-gray-500"></select>
+                        <p className="text-sm text-gray-300">Chosen Dataview:</p>
+                        <select name="sortSelector" id="sortSelector" className="border rounded p-2 text-gray-300 bg-gray-500"></select>
                 </div>
             </div>
-            <div id="switchButton-div">
-                <button type="button" id="switchButton" className="bg-gray-500 text-white px-4 py-2 rounded"></button>
-            </div>
-            <div id="data-container" className="hidden max-h-[450px] overflow-auto border rounded p-2"></div>
+            <div id="data-container" className="hidden max-h-[450px] overflow-auto border rounded p-2 text-gray-300"></div>
+            <button type="button" id="switchButton" className="bg-gray-500 text-white px-4 py-2 rounded w-full"></button>
+            
         </div>
     );
 };

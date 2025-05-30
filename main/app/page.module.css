@@ -21,6 +21,7 @@
 /*======= LAYOUT =======*/
 .main{
     overflow: hidden;
+    background-color: #374753;
 }
 
 .container{
@@ -94,3 +95,4 @@
     background-clip: text;
     
 }
+
