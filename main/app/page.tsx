@@ -34,28 +34,11 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+      
       <section id="donut_attaks">
         <div className={styles.container}>
           <div className={styles.barchart_attaks__header}>
             <h1 className={styles.barchart_attaks__title}>Donut Chart</h1>
-              <div id="selector-container" className="selector-container">
-                <div className="selector-group">
-                    <p className="height: 1%; display: block;">Chosen Category:</p>
-                    <select type="select" name="categorySelector" id="categorySelector">
-                        category
-                    </select>
-                    <p style="height: 1%; display: block;">Chosen Dataview:</p>
-                    <select type="select" name="sortSelector" id="sortSelector">
-                        sort
-                    </select>
-                </div>
-            </div>
-            <div id="graph-container" className="graph-container"></div>
-            <div id="switchButton-div" className="switchButton-div">
-                <button type="button" id="switchButton"></button>
-            </div>
-            <div id="data-container" className="data-container"></div>
               <Donut/>
           </div>
         </div>

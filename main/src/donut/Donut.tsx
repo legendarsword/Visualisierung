@@ -160,16 +160,19 @@ export const Donut = () => {
             //createSelection();
             //console.log("layerData:")
             //console.log(layerData);
-            var width = document.querySelector('#graph-container').clientWidth;
-            var height = document.querySelector('#graph-container').clientHeight;
+            //var width = document.querySelector('#graph-container').clientWidth;
+            //var height = document.querySelector('#graph-container').clientHeight;
+            var width = 450;
+            var height = 450;
             var margin = 20
             var radius = Math.min(width*0.85, height*0.85) / 2 - margin
-            d3.select("svg").remove("svg")
+            d3.select("#graph-container").select("svg").remove()
             // Erzeugen des Containers
             var svg = d3.select("#graph-container")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
+                .attr("viewBox", [0, 0, width, height])
                 .append("g")
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
             
@@ -228,8 +231,9 @@ export const Donut = () => {
                         let switchFormButton = document.getElementById("switchButton");
                         currentForm = "Data"
                         switchFormButton.innerHTML = 'Show Visualization!';
-                        d3.select("svg").remove("svg")
-                        document.getElementById("selector-container").style.display = 'none';
+                        //d3.select("#graph-container").select("svg").remove()
+                        document.getElementById("viz-container").style.display = 'none';
+                        document.getElementById("data-container").style.display = 'block';
                         showData();
                     } else {
                         filterByKeyword(categorySelect, d.data[1][0]);
@@ -351,14 +355,19 @@ export const Donut = () => {
             var column = ["Country", "Year", "Attack Type", "Target Industry", "Financial Loss (in Million $)", "Number of Affected Users", "Attack Source", "Security Vulnerability Type", "Defense Mechanism Used", "Incident Resolution Time (in Hours)"];
             //console.log("Show Columns: ")
             //console.log(column)
-            var width = 850
+            var width = window.innerWidth*0.9
             var height = 450
             var margin = 10
+            // Löschen des vorherigen Containers
+            d3.select("#data-container").select("table").remove()
             // Erzeugen des Containers
-            var table = d3.select("#graph-container")
+            var table = d3.select("#data-container")
                 .append("table")
                 .attr("width", width)
                 .attr("height", height)
+                .attr("viewBox", [0, 0, width, height])
+                .style("border-collapse", "collapse")
+                .style("border", "2px black solid")
                 .append("g")
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
             var thead = table.append('thead')
@@ -368,12 +377,17 @@ export const Donut = () => {
                 .data(column)
                 .enter()
                 .append("th")
+                .style("padding", "10px")
+                .style("border", "1px solid black")
+                .style("border-left", "1px solid black")
+                .style("text-align", "center")
                 .text(function (column){ return column;})
             // create a row for each object in the data
             var rows = tbody.selectAll('tr')
             .data(dataStack.at(dataStack.length -1))
             .enter()
-            .append('tr');
+            .append('tr')
+            ;
             // create a cell in each row for each column
             var cells = rows.selectAll('td')
             .data(function (row) {
@@ -383,6 +397,10 @@ export const Donut = () => {
             })
             .enter()
             .append('td')
+                .style("padding", "10px")
+                .style("border", "1px solid black")
+                .style("border-left", "1px solid black")
+                .style("text-align", "center")
                 .text(function (d) { return d.value; });
         }
 
@@ -444,14 +462,14 @@ export const Donut = () => {
                 if (currentForm == "Visual"){
                     currentForm = "Data"
                     switchFormButton.innerHTML = 'Show Visualization!';
-                    d3.select("svg").remove("svg")
-                    document.getElementById("selector-container").style.display = 'none';
+                    document.getElementById("viz-container").style.display = 'none';
+                    document.getElementById("data-container").style.display = 'block';
                     showData();
                 } else {
                     currentForm = "Visual"
                     switchFormButton.innerHTML = 'Show raw Data!';
-                    d3.select("table").remove("table")
-                    document.getElementById("selector-container").style.display = 'table';
+                    document.getElementById("viz-container").style.display = 'grid';
+                    document.getElementById("data-container").style.display = 'none';
                     visualiseData();
                 }
             }
@@ -461,5 +479,21 @@ export const Donut = () => {
         init();
 
 }, [])
-    return (<div id="donut-div"/>)
-}
+    return (
+        <div id="donut-div">
+            <div id="viz-container" className="grid grid-cols-2 gap-4">
+                <div id="graph-container" className="p-4 rounded"></div>
+                <div id="selector-container" className="p-4 rounded flex flex-col justify-center items-center">
+                        <p className="text-sm">Chosen Category:</p>
+                        <select name="categorySelector" id="categorySelector" className="border rounded p-2"></select>
+                        <p className="text-sm">Chosen Dataview:</p>
+                        <select name="sortSelector" id="sortSelector" className="border rounded p-2"></select>
+                </div>
+            </div>
+            <div id="switchButton-div">
+                <button type="button" id="switchButton" className="bg-gray-500 text-white px-4 py-2 rounded"></button>
+            </div>
+            <div id="data-container" className="hidden max-h-[450px] overflow-auto border rounded p-2"></div>
+        </div>
+    );
+};
