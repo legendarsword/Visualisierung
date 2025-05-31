@@ -161,22 +161,23 @@ export const Donut = () => {
             //createSelection();
             //console.log("layerData:")
             //console.log(layerData);
-            //var width = document.querySelector('#graph-container').clientWidth;
-            //var height = document.querySelector('#graph-container').clientHeight;
+            //var width = document.querySelector('#donut-container').clientWidth;
+            //var height = document.querySelector('#donut-container').clientHeight;
             var width = 450;
             var height = 450;
             var margin = 20
             var radius = Math.min(width*0.85, height*0.85) / 2 - margin
-            d3.select("#graph-container").select("svg").remove()
+            d3.select("#donut-container").select("svg").remove()
             // Erzeugen des Containers
-            var svg = d3.select("#graph-container")
+            var svg = d3.select("#donut-container")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
                 .attr("viewBox", [0, 0, width, height])
                 .append("g")
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-            
+            // Add Tooltips
+            d3.select('body').append('div').attr('id', 'tooltip').attr('style', 'position: absolute; opacity: 0;');
             
             // Compute the position of each group on the pie:
             const pie = d3.pie()
@@ -215,14 +216,12 @@ export const Donut = () => {
                 .style("stroke-width", "2px")
                 .style("opacity", 0.7)
                 .on("click", (event, d) => {
-                    console.log("Click-Event:")
-                    console.log(d)
                     if (dataStack.length > 2) {
                         //alert ("3x gespungen")
                         let switchFormButton = document.getElementById("switchButton");
                         currentForm = "Data"
                         switchFormButton.innerHTML = 'Show Visualization!';
-                        //d3.select("#graph-container").select("svg").remove()
+                        //d3.select("#donut-container").select("svg").remove()
                         document.getElementById("viz-container").style.display = 'none';
                         document.getElementById("data-container").style.display = 'block';
                         showData();
@@ -254,17 +253,31 @@ export const Donut = () => {
                             visualiseData();
                         });
                     }})
-                .on("mouseover", function () {
+                .on("mouseover", function (event, d) {
                     //return false;
+                    var tooltip = d3.select('#tooltip').transition().duration(200).style('opacity', 1).style("font-size", 12).attr("fill", "#d1d5dc")
+                    .text(
+                        "Country: " + d.data.at(1).at(0) + " \r\n" + 
+                        "Count of attacks: " + d.data.at(1).at(1).count + " \r\n" +
+                        "Financial Loss (in Million $): " + d.data.at(1).at(1).financialLoss + " \r\n" + 
+                        "Number of Affected Users: " + d.data.at(1).at(1).usersAffected + " \r\n" + 
+                        "Incident Resolution Time (in Hours): " + d.data.at(1).at(1).incidentResolutionTime
+                        
+                    )
+                    console.log(tooltip)
                     d3.select(this).transition()
                         .duration(100)
                         .attr("d", arcOver);
                 })
                 .on("mouseout", function () {
+                    d3.select('#tooltip').style('opacity', 0)
                     d3.select(this).transition()
                         .duration(500)
-                        .attr("d", sliceArcs);
-                });
+                        .attr("d", sliceArcs);})
+                .on('mousemove', function(event) {
+                    d3.select('#tooltip').style('left', (event.pageX+10) + 'px').style('top', (event.pageY+10) + 'px')
+                })
+                ;
             
             
             // Erzeugen der Beschriftung
@@ -350,6 +363,7 @@ export const Donut = () => {
                     });
 
             }
+            
         }
 
         function showData(): void {
@@ -494,7 +508,7 @@ export const Donut = () => {
     return (
         <div id="donut-div" className='justify-center items-center'>
             <div id="viz-container" className="grid grid-cols-2 gap-4">
-                <div id="graph-container" className="p-4 rounded"></div>
+                <div id="donut-container" className="p-4 rounded"></div>
                 <div id="selector-container" className="p-4 rounded flex flex-col justify-center items-center">
                         <p className="text-sm text-gray-300">Chosen Category:</p>
                         <select name="categorySelector" id="categorySelector" className="border rounded p-2 text-gray-300 bg-gray-500"></select>
