@@ -255,16 +255,17 @@ export const Donut = () => {
                     }})
                 .on("mouseover", function (event, d) {
                     //return false;
-                    var tooltip = d3.select('#tooltip').transition().duration(200).style('opacity', 1).style("font-size", 12).attr("fill", "#d1d5dc")
-                    .text(
-                        "Country: " + d.data.at(1).at(0) + " \r\n" + 
-                        "Count of attacks: " + d.data.at(1).at(1).count + " \r\n" +
-                        "Financial Loss (in Million $): " + d.data.at(1).at(1).financialLoss + " \r\n" + 
-                        "Number of Affected Users: " + d.data.at(1).at(1).usersAffected + " \r\n" + 
-                        "Incident Resolution Time (in Hours): " + d.data.at(1).at(1).incidentResolutionTime
-                        
-                    )
-                    console.log(tooltip)
+                    const tooltipText = 
+                        "Country: " + d.data.at(1).at(0) + "<br>" + 
+                        "Count of attacks: " + d.data.at(1).at(1).count + "<br>" +
+                        "Financial Loss (in Million $): " + d.data.at(1).at(1).financialLoss + "<br>" + 
+                        "Number of Affected Users: " + d.data.at(1).at(1).usersAffected + "<br>" + 
+                        "Incident Resolution Time (in Hours): " + d.data.at(1).at(1).incidentResolutionTime ;
+                    // background 6a7282 text d1d5dc 
+                    var tooltip = d3.select('#tooltip').style('opacity', 1).style("font-size", "12px").style("background-color", "#6a7282").style("color", "#d1d5dc");
+                    tooltip.html(tooltipText)
+
+                    //console.log(tooltip)
                     d3.select(this).transition()
                         .duration(100)
                         .attr("d", arcOver);
