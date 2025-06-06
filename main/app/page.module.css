@@ -18,6 +18,13 @@
     background-clip: text;
 }
 
+.snap_container {
+  background-color: hsl(206, 4%, 4%);
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
 /*======= LAYOUT =======*/
 .main{
     overflow: hidden;
@@ -41,6 +48,9 @@
 .finantial_loss{
     justify-content: center;
     display: flex;
+    height: 100vh;
+    scroll-snap-align: start;
+    align-items: center;
 }
 
 .finantial_loss__title{
@@ -82,6 +92,9 @@
 .barchart_attaks{
     justify-content: center;
     display: flex;
+    height: 100vh;
+    scroll-snap-align: start;
+    align-items: center;
 }
 
 .barchart_attaks__title{

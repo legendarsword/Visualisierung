@@ -517,7 +517,7 @@ export const Donut = () => {
                         <select name="sortSelector" id="sortSelector" className="border rounded p-2 text-gray-300 bg-gray-500"></select>
                 </div>
             </div>
-            <div id="data-container" className="hidden max-h-[450px] overflow-auto border rounded p-2 text-gray-300"></div>
+            <div id="data-container" className="hidden max-h-[450px] overflow-auto border rounded p-2 text-gray-300 max-w-[1200px]"></div>
             <button type="button" id="switchButton" className="bg-gray-500 text-white px-4 py-2 rounded w-full"></button>
             
         </div>

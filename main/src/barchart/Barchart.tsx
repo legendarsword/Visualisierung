@@ -74,7 +74,8 @@ export const Barchart = () => {
                     .attr("class", "enter")
                     .attr("transform", `translate(0,${config.margin.top + config.barStep * config.barPadding})`)
                     .attr("text-anchor", "end")
-                    .style("font", "15px sans-serif");
+                    .style("font", "15px sans-serif")
+                    .style("fill", "gray");;
         
                 const bars = g.selectAll("g")
                     .data(d.children)
