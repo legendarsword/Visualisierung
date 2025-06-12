@@ -1,9 +1,28 @@
 import React, { FC, useEffect } from 'react';
 import * as d3 from 'd3';
+/*
+    Major Decision:
+    - Should look like this: https://gist.github.com/pqthang711/e750d2f5918df1b8c5e6e244003703c6
+    - Stack-like behavior with arrays, so the return is possible but huge data storage
+    - D3js on visualization and filterung
+    - Order:
+        1. filter current data depending on selectec pie slice and add to stack
+        2. Group data depending on selected category
+        3. create visualization depending the selected dataview
+
+*/
 
 export const Donut = () => {
     useEffect(() => {
+        // dataFile is in public directory
         const dataFile: string = "data/Global_Cybersecurity_Threats_2015-2024.csv";
+        /*
+            dataStack + categoriesStack
+                1. original data
+                2. after 1. filtering 
+                3. after 2. filtering
+                4. after 3. filtering --> showData()-table
+        */
         const dataStack: any[] = [];
         const categoriesStack: string[] = [];
         let sortSelect: string;
@@ -22,6 +41,10 @@ export const Donut = () => {
             visualiseData();
         }
 
+        /*
+            Initialize Data, parse the csv value for usage and put first data onto stack
+            await because javascript tried to create visualization before creating data
+        */
         async function initializeData(): Promise<string> {
             return new Promise(resolve => {
                 d3.csv(dataFile).then(function (data) {
@@ -43,12 +66,22 @@ export const Donut = () => {
             });
         }
 
+        /*
+            Filter the data from peek of stack and push it to stack
+            The top of the stack is now a array of row-objects
+            example:
+            [ 
+                Object(Country, Attack Type, ....),
+                Object(Country, Attack Type, ....)
+            ]
+        */
         function filterByKeyword(columnName: string, keyWord: string): void {
             let result: any[];
             switch (columnName) {
                 case "Financial Loss (in Million $)":
                 case "Number of Affected Users":
                 case "Incident Resolution Time (in Hours)":
+                    // These 3 categories will enter a range split with an - (e.g. 100-200) and tries to filter all rows
                     const values: number[] = keyWord.split("-").sort().map(Number);
                     result = dataStack.at(dataStack.length - 1).filter(function(d) {
                         return d[columnName] > values[0] && d[columnName] < values[1];
@@ -61,6 +94,7 @@ export const Donut = () => {
                 case "Security Vulnerability Type":
                 case "Defense Mechanism Used":
                 case "Year":
+                    // These values will return the exact filtered rows
                     result = dataStack.at(dataStack.length - 1).filter(function(d) {
                         return d[columnName] === keyWord;
                     });
@@ -68,13 +102,21 @@ export const Donut = () => {
                 default:
                     console.log("Fehler in der Gruppierung: " + columnName);
             }
-            
+            // Create new category list
             const newCategories: string[] = categoriesStack.at(categoriesStack.length - 1).filter(function(d) { return d !== columnName; });
 
             dataStack.push(result);
             categoriesStack.push(newCategories);
         }
-
+        
+        /*
+            This function returns an array of arrays of values depending the selected  category
+            Example: 
+            [
+                [Value 1, [ financialLoss, usersAffected, incidentResolutionTime, count]],
+                [Value 2, [ financialLoss, usersAffected, incidentResolutionTime, count]],
+            ]
+        */
         function groupForVisualisation(column: string): any {
             let result: any;
             let minimum: number = 0, maximum: number = 0, nullBezug:number = 0, schrittweite:number = 0, objekt1:any, high:number = 0, low:number = 0;
@@ -87,7 +129,7 @@ export const Donut = () => {
                 case "Defense Mechanism Used":
                 case "Year":
                 case "Target Industry":
-                    //TOOO: In ein vernünftiges Array umbauen -> Siehe Zeile 82
+                    // This can be done with the d3 function because of single word searches
                     result = d3.rollups(dataStack.at(dataStack.length -1),
                         (D) => ({
                             financialLoss: d3.sum(D, d => +d["Financial Loss (in Million $)"]),
@@ -101,18 +143,21 @@ export const Donut = () => {
                 case "Financial Loss (in Million $)":
                 case "Number of Affected Users":
                 case "Incident Resolution Time (in Hours)":
+                    // This is the sequential version of filtering, because of this will categorize all rows into 6 slices
                     minimum = Math.round(d3.min(dataStack.at(dataStack.length -1), (d) => d[column]));
                     maximum = Math.round(d3.max(dataStack.at(dataStack.length -1), (d) => d[column]));
                     nullBezug = maximum - minimum;
                     schrittweite = parseInt(nullBezug / 5);
                     high = Math.round(schrittweite/2)
                     result = []
+                    // prepared object for each slice
                     objekt1 = {
                         financialLoss: 0,
                         incidentResolutionTime: 0,
                         usersAffected: 0,
                         count: 0,
                     }
+                    // create the label text
                     for (let index = 0; index < 5; index++) {
                         result.push([low + "-" + high, structuredClone(objekt1)])
                         low = high + 1
@@ -147,7 +192,6 @@ export const Donut = () => {
                             result[4][1].count += 1
                         } 
                     });
-                    //console.log("minumum: " + minimum + ", maximum: " + maximum + ", nullBezug: " + nullBezug)
                     break;
                 default:
                     console.log("Fehler in der Gruppierung: " + column);
@@ -156,19 +200,19 @@ export const Donut = () => {
             return result;
         }
 
+        /*
+            This function is creating the pie chart, label + tooltip depending on the selection from to of stack
+            it uses the visible donut-container div --> will be hiden, if table is shown --> showData()
+        */
         function visualiseData(): void {
-        var layerData = groupForVisualisation(categorySelect);
-            //createSelection();
-            //console.log("layerData:")
-            //console.log(layerData);
-            //var width = document.querySelector('#donut-container').clientWidth;
-            //var height = document.querySelector('#donut-container').clientHeight;
+            var layerData = groupForVisualisation(categorySelect);
             var width = 450;
             var height = 450;
             var margin = 20
             var radius = Math.min(width*0.85, height*0.85) / 2 - margin
+            // destroy the previous container, to not conflict the creation
             d3.select("#donut-container").select("svg").remove()
-            // Erzeugen des Containers
+            // create new pie chart
             var svg = d3.select("#donut-container")
                 .append("svg")
                 .attr("width", width)
@@ -176,25 +220,23 @@ export const Donut = () => {
                 .attr("viewBox", [0, 0, width, height])
                 .append("g")
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-            // Add Tooltips
+            
+            // Add Tooltips-Container
             d3.select('body').append('div').attr('id', 'tooltip').attr('style', 'position: absolute; opacity: 0;');
             
-            // Compute the position of each group on the pie:
+            // create pie object, data will be added later            
             const pie = d3.pie()
                 .value(function (d) {
-                    //console.log(d[1][1][sortSelect])
                     // d -> Array-Objekt
                     // d[1] -> Objekt aus Array (Test ist: ["Land", [finanzialLoss: ...]]) 
                     // d[1][1] -> Werte aus Objekt
                     return d[1][1][sortSelect]
                 })
                 .sort(function (a,b){ return a[1][0] > b[1][0]})
-                //.sort(null)
+
             const data_ready = pie(Object.entries(layerData))
             
-            //console.log("data_ready: ")
-            //console.log(data_ready)
-            //Erzeugen des Daten Donuts
+            // Creation of arc sizes
             var labelArc = d3.arc()
                 .innerRadius(radius*0.5)
                 .outerRadius(radius*0.85)
@@ -204,24 +246,25 @@ export const Donut = () => {
             var arcOver = d3.arc()
                 .outerRadius(radius +9 )
                 .innerRadius(0.8 * radius);
+
             // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
             svg.selectAll('slices')
                 .data(data_ready)
                 .join('path')
                 .attr('d', sliceArcs)
                 .attr('fill', function (d) {
+                    // here the color of each slice is added
                     return (colorRange(d.data[1]))
                 })
                 .attr("stroke", "black")
                 .style("stroke-width", "2px")
                 .style("opacity", 0.7)
                 .on("click", (event, d) => {
+                    // after 3. selection, jump the table view, else filter, group and visulize data
                     if (dataStack.length > 2) {
-                        //alert ("3x gespungen")
                         let switchFormButton = document.getElementById("switchButton");
                         currentForm = "Data"
                         switchFormButton.innerHTML = 'Show Visualization!';
-                        //d3.select("#donut-container").select("svg").remove()
                         document.getElementById("viz-container").style.display = 'none';
                         document.getElementById("data-container").style.display = 'block';
                         filterByKeyword(categorySelect, d.data[1][0]);
@@ -229,6 +272,7 @@ export const Donut = () => {
                     } else {
                         filterByKeyword(categorySelect, d.data[1][0]);
                         createSelection();
+                        // save color of slice for return arc
                         returnCircleColor.push(colorRange(d.data[1]))
                         svg.selectAll('slices').selectAll('text').remove();
                         var startAngle = d.startAngle;
@@ -245,7 +289,6 @@ export const Donut = () => {
                                 var newAngle = d.startAngle + 2 * Math.PI;
                                 var interpolate = d3.interpolate(d.endAngle, newAngle);
                                 return function (tick) {
-                                    //console.log(newAngle + " " + interpolate(tick))
                                     endAngle = interpolate(tick);
                                     return arcSelect(d);
                                 };
@@ -255,7 +298,7 @@ export const Donut = () => {
                         });
                     }})
                 .on("mouseover", function (event, d) {
-                    //return false;
+                    // create tooltip text for slice and show it
                     const tooltipText = 
                         d.data.at(1).at(0) + "<br>" + 
                         "Count of attacks: " + d.data.at(1).at(1).count + "<br>" +
@@ -266,23 +309,26 @@ export const Donut = () => {
                     var tooltip = d3.select('#tooltip').style('opacity', 1).style("font-size", "12px").style("background-color", "#6a7282").style("color", "#d1d5dc");
                     tooltip.html(tooltipText)
 
-                    //console.log(tooltip)
+                    // increase size of selected slice
                     d3.select(this).transition()
                         .duration(100)
                         .attr("d", arcOver);
                 })
                 .on("mouseout", function () {
+                    // hide tooltip text
                     d3.select('#tooltip').style('opacity', 0)
+                    // decrease size of selected slice to original size
                     d3.select(this).transition()
                         .duration(500)
                         .attr("d", sliceArcs);})
                 .on('mousemove', function(event) {
+                    // tooltip follow the mouse
                     d3.select('#tooltip').style('left', (event.pageX+10) + 'px').style('top', (event.pageY+10) + 'px')
                 })
                 ;
             
             
-            // Erzeugen der Beschriftung
+            // create the description of slice and add to pie chart
             svg.selectAll('slices')
                 .data(data_ready)
                 .enter()
@@ -294,6 +340,7 @@ export const Donut = () => {
                 .attr("fill", "#d1d5dc")
                 ;
             
+            // create arc settings for return arc
             var arcReturn = d3.arc()
                 .startAngle(0)
                 .endAngle(2*Math.PI)
@@ -305,7 +352,7 @@ export const Donut = () => {
                 .innerRadius(radius + 10)
                 .outerRadius(radius * 1.2);
             
-            //Erzeugen des äußeren Rings fürs zurückspringen    
+            //create return arc, after first selection    
             if (dataStack.length > 1){
                 svg.append('path')
                     .style("fill", returnCircleColor.at(returnCircleColor.length-1))
@@ -314,7 +361,6 @@ export const Donut = () => {
                     .style("opacity", 0.8)
                     .on("click", function (d){
                         if(dataStack.length > 1){
-                            console.log("Springe zurück")
                             dataStack.pop();
                             categoriesStack.pop();
                             createSelection();
@@ -332,7 +378,6 @@ export const Donut = () => {
                                 .attrTween("d", function(){
                                     var interpolate = d3.interpolate(2*Math.PI, 0);
                                     return function (tick) {
-                                        //console.log(newAngle + " " + interpolate(tick))
                                         endAngle = interpolate(tick);
                                         return arcSelect(d);
                                     };
@@ -341,46 +386,35 @@ export const Donut = () => {
                                 returnCircleColor.pop();
                                 visualiseData();
                             });
-
-
-
-                            //visualiseData();
                         } else console.log("Die erstes Ebene existiert schon")
                     })
                     .on("mouseover", function () {
-                    //return false;
                     d3.select(this).transition()
-                        //.attr('fill', "#219ddb");
-                        //.ease(1)
                         .duration(100)
                         .attr("d", arcReturnMouseOver);
                     })
                     .on("mouseout", function () {
-                        //return false;
                         d3.select(this).transition()
-                            //.attr('fill', "#6791D4");
-                            //.ease(1)
                             .duration(500)
                             .attr("d", arcReturn);
                     });
-
             }
-            
         }
+
+        /*
+            This function creating the table, for result and intermediate showing of remaining data
+            normally the data-container div is hidden, but on creation, the donut-container div will be hidden and the data-container shown
+        */
 
         function showData(): void {
         var data = dataStack.at(dataStack.length -1);
-            //console.log("Show data: ")
-            //console.log(data)
             var column = ["Country", "Year", "Attack Type", "Target Industry", "Financial Loss (in Million $)", "Number of Affected Users", "Attack Source", "Security Vulnerability Type", "Defense Mechanism Used", "Incident Resolution Time (in Hours)"];
-            //console.log("Show Columns: ")
-            //console.log(column)
             var width = 968 // Kommt aus TailwindCSS ".container"-Class
             var height = 450
             var margin = 10
-            // Löschen des vorherigen Containers
+            // delete the previous table from data-container
             d3.select("#data-container").select("table").remove()
-            // Erzeugen des Containers
+            // create new table
             var table = d3.select("#data-container")
                 .append("table")
                 .attr("width", width)
@@ -410,7 +444,6 @@ export const Donut = () => {
             .enter()
             .append('tr')
             .on("mouseover", function () {
-                //return false;
                 d3.select(this).style("background-color", "#374753").style("opacity", 0.1).style("color", wordColor).style("opacity", 1);
             })
             .on("mouseout", function () {
@@ -432,6 +465,10 @@ export const Donut = () => {
                 .text(function (d) { return d.value; });
         }
 
+        /*
+            creates the selection menues from categoryStack and add interaction to both selectors
+            can be done with react, but is done via javascript
+        */
         function createSelection(): void {
         var i, L = document.getElementById('categorySelector').options.length - 1;
             for(i = L; i >= 0; i--) {
@@ -468,19 +505,20 @@ export const Donut = () => {
 
             document.getElementById('sortSelector').onchange = function(){
                 sortSelect = document.getElementById('sortSelector').value;
-                //console.log(sortSelect)
                 visualiseData();
             }
             document.getElementById('categorySelector').onchange = function(){
                 categorySelect = document.getElementById('categorySelector').value;
-                //console.log(categorySelect)
                 visualiseData();
             }
 
             categorySelect = categoriesStack.at(categoriesStack.length -1).at(0);
             sortSelect = sortArray.at(0).at(0);
-            //console.log("sortSelect: " + sortSelect + ", categorySelect: " + categorySelect);
         }
+
+        /*
+            create the interaction of the switch-Button between the raw data table und the visualization
+        */
 
         function initButton(): void {
             let switchFormButton = document.getElementById("switchButton");
@@ -499,6 +537,7 @@ export const Donut = () => {
                     document.getElementById("viz-container").style.display = 'grid';
                     document.getElementById("data-container").style.display = 'none';
                     console.log("datastack length " + dataStack.length)
+                    // pop stacks after returning from table after 3. selection
                     if (dataStack.length > 3) {
                         dataStack.pop(); categoriesStack.pop();
                     }
@@ -511,6 +550,10 @@ export const Donut = () => {
         init();
 
 }, [])
+    /*
+        page.tsx contains only the section container with the head line.
+        This will be added into the HTML-Code on load.
+    */
     return (
         <div id="donut-div" className='justify-center items-center'>
             <div id="viz-container" className="grid grid-cols-2 gap-4">
