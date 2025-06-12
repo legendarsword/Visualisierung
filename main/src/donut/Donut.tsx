@@ -224,6 +224,7 @@ export const Donut = () => {
                         //d3.select("#donut-container").select("svg").remove()
                         document.getElementById("viz-container").style.display = 'none';
                         document.getElementById("data-container").style.display = 'block';
+                        filterByKeyword(categorySelect, d.data[1][0]);
                         showData();
                     } else {
                         filterByKeyword(categorySelect, d.data[1][0]);
@@ -256,7 +257,7 @@ export const Donut = () => {
                 .on("mouseover", function (event, d) {
                     //return false;
                     const tooltipText = 
-                        "Country: " + d.data.at(1).at(0) + "<br>" + 
+                        d.data.at(1).at(0) + "<br>" + 
                         "Count of attacks: " + d.data.at(1).at(1).count + "<br>" +
                         "Financial Loss (in Million $): " + d.data.at(1).at(1).financialLoss + "<br>" + 
                         "Number of Affected Users: " + d.data.at(1).at(1).usersAffected + "<br>" + 
@@ -374,7 +375,7 @@ export const Donut = () => {
             var column = ["Country", "Year", "Attack Type", "Target Industry", "Financial Loss (in Million $)", "Number of Affected Users", "Attack Source", "Security Vulnerability Type", "Defense Mechanism Used", "Incident Resolution Time (in Hours)"];
             //console.log("Show Columns: ")
             //console.log(column)
-            var width = window.innerWidth*0.9
+            var width = 968 // Kommt aus TailwindCSS ".container"-Class
             var height = 450
             var margin = 10
             // Löschen des vorherigen Containers
@@ -384,7 +385,7 @@ export const Donut = () => {
                 .append("table")
                 .attr("width", width)
                 .attr("height", height)
-                .attr("viewBox", [0, 0, width, height])
+                //.attr("viewBox", [0, 0, width, height])
                 .style("border-collapse", "collapse")
                 .style("border", "2px black solid")
                 .append("g")
@@ -401,20 +402,20 @@ export const Donut = () => {
                 .style("border", "1px solid black")
                 .style("border-left", "1px solid black")
                 .style("text-align", "center")
+                .style("background-color", "#374753").style("opacity", 1)
                 .text(function (column){ return column;})
             // create a row for each object in the data
             var rows = tbody.selectAll('tr')
             .data(dataStack.at(dataStack.length -1))
             .enter()
             .append('tr')
-                .on("mouseover", function () {
-                    //return false;
-                    d3.select(this).style("background-color", "#0c1012").style("opacity", 0.1).style("color", wordColor).style("opacity", 1);
-                })
-                .on("mouseout", function () {
-                    d3.select(this).style("background-color", "#374753").style("opacity", 1).style("color", wordColor).style("opacity", 1);
-                });
-            ;
+            .on("mouseover", function () {
+                //return false;
+                d3.select(this).style("background-color", "#374753").style("opacity", 0.1).style("color", wordColor).style("opacity", 1);
+            })
+            .on("mouseout", function () {
+                d3.select(this).style("background-color", "#0c1012").style("opacity", 1).style("color", wordColor).style("opacity", 1);
+            });
             // create a cell in each row for each column
             var cells = rows.selectAll('td')
             .data(function (row) {
@@ -497,6 +498,10 @@ export const Donut = () => {
                     switchFormButton.innerHTML = 'Show raw Data!';
                     document.getElementById("viz-container").style.display = 'grid';
                     document.getElementById("data-container").style.display = 'none';
+                    console.log("datastack length " + dataStack.length)
+                    if (dataStack.length > 3) {
+                        dataStack.pop(); categoriesStack.pop();
+                    }
                     visualiseData();
                 }
             }
@@ -517,7 +522,7 @@ export const Donut = () => {
                         <select name="sortSelector" id="sortSelector" className="border rounded p-2 text-gray-300 bg-gray-500"></select>
                 </div>
             </div>
-            <div id="data-container" className="hidden max-h-[450px] overflow-auto border rounded p-2 text-gray-300 max-w-[1200px]"></div>
+            <div id="data-container" className="hidden max-h-[450px] overflow-auto border rounded p-2 text-gray-300 max-w-[968px]"></div>
             <button type="button" id="switchButton" className="bg-gray-500 text-white px-4 py-2 rounded w-full"></button>
             
         </div>
