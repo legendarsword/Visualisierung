@@ -4,7 +4,6 @@ import styles from "@/app/page.module.css";
 import { useEffect, useState } from 'react';
 
 export const FinancialMap = () => {
-
     const [inputValue, setInputValue] = useState('0');
 
     useEffect(() => {
@@ -15,49 +14,60 @@ export const FinancialMap = () => {
         const formatNumber = d3.format(",d");
         const parseNumber = str => +str.replace(/,/g, "");
 
+        // Initialize SVG container
         const svg = d3.select("#chart")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height + 20)
-        .attr("viewBox", [0, -20, width, height + 20])
-        .style("font", "10px sans-serif");
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height + 20)
+            .attr("viewBox", [0, -20, width, height + 20])
+            .style("font", "10px sans-serif");
 
+        // Load region info and financial data
         Promise.all([
-        d3.csv("data/census-regions.csv"),
-        d3.tsv("data/financial_losses_2015_2024.tsv")
+            d3.csv("data/census-regions.csv"),
+            d3.tsv("data/financial_losses_2015_2024.tsv")
         ]).then(([regions, statesRaw]) => {
+            // Prepare state data with array of yearly values
             const states = statesRaw.map(row => ({
                 name: row[""],
                 values: keys.map(key => parseNumber(row[key]))
             }));
 
+            // Build lookup maps
             const regionByState = new Map(regions.map(d => [d.State, d.Region]));
             const divisionByState = new Map(regions.map(d => [d.State, d.Division]));
+
+            // Group state data by region
             const grouped = d3.group(states, d => regionByState.get(d.name), d => divisionByState.get(d.name));
 
+            // Compute max total value across all years (used for normalization)
             const max = d3.max(keys, (d, i) =>
                 d3.hierarchy(grouped).sum(d => d.values[i]).value
             );
 
+            // Define color scale per region
             const color = d3.scaleOrdinal()
                 .domain(grouped.keys())
                 .range(d3.schemeCategory10.map(d => d3.interpolateRgb(d, "white")(0.5)));
 
+            // Create a reusable treemap layout
             const treemap = d3.treemap()
                 .size([width, height])
                 .tile(d3.treemapResquarify)
                 .padding(d => d.height === 1 ? 1 : 0)
                 .round(true);
 
+            // Root node of hierarchy, sum total values per state
             const root = d3.hierarchy(grouped)
                 .sum(d => Array.isArray(d.values) ? d3.sum(d.values) : 0)
                 .sort((a, b) => b.value - a.value);
 
+            // Create a background container for each year box with size proportional to total value
             const box = svg.append("g")
                 .selectAll("g")
                 .data(keys.map((key, i) => {
-                const value = root.sum(d => d.values[i]).value;
-                return { key, value, i, k: Math.sqrt(value / max) };
+                    const value = root.sum(d => d.values[i]).value;
+                    return { key, value, i, k: Math.sqrt(value / max) }; // normalize by scale factor
                 }).reverse())
                 .join("g")
                 .attr("transform", d => `translate(${(1 - d.k) / 2 * width},${(1 - d.k) / 2 * height})`)
@@ -78,92 +88,111 @@ export const FinancialMap = () => {
 
             const leafGroup = svg.append("g");
 
+            // Layout function to recalculate node positions for a given year
             function layout(index) {
                 const k = Math.sqrt(root.sum(d => d.values[index]).value / max);
                 const tx = (1 - k) / 2 * width;
                 const ty = (1 - k) / 2 * height;
 
                 return treemap.size([width * k, height * k])(root.copy())
-                .each(d => {
-                    d.x0 += tx;
-                    d.x1 += tx;
-                    d.y0 += ty;
-                    d.y1 += ty;
-                    if (d.values) d.value = d.values[index];
-                })
-                .leaves();
+                    .each(d => {
+                        d.x0 += tx;
+                        d.x1 += tx;
+                        d.y0 += ty;
+                        d.y1 += ty;
+                        if (d.values) d.value = d.values[index];
+                    })
+                    .leaves();
             }
 
+            // Updates the treemap display for a given year
             function update(index, duration = 2000) {
                 d3.select("#yearLabel").text(`Year: ${keys[index]}`);
 
+                // Fade in year box for selected year
                 box.transition()
-                .duration(duration)
-                .attr("opacity", d => d.i >= index ? 1 : 0);
+                    .duration(duration)
+                    .attr("opacity", d => d.i >= index ? 1 : 0);
 
                 const leaves = layout(index);
 
+                // Data join for rectangles (one per state)
                 const leaf = leafGroup.selectAll("g")
-                .data(leaves, d => d.data.name);
+                    .data(leaves, d => d.data.name);
 
+                // Enter selection and create new rectangles
                 const gEnter = leaf.enter().append("g")
-                .attr("transform", d => `translate(${d.x0},${d.y0})`);
+                    .attr("transform", d => `translate(${d.x0},${d.y0})`);
 
                 gEnter.append("rect")
-                .attr("fill", d => {
-                    let node = d;
-                    while (node.depth > 1) node = node.parent;
-                    return color(node.data[0]);
-                })
-                .attr("width", d => d.x1 - d.x0)
-                .attr("height", d => d.y1 - d.y0);
+                    .attr("fill", d => {
+                        let node = d;
+                        while (node.depth > 1) node = node.parent;
+                        return color(node.data[0]);
+                    })
+                    .attr("width", d => d.x1 - d.x0)
+                    .attr("height", d => d.y1 - d.y0);
 
                 gEnter.append("text")
-                .attr("x", 3)
-                .attr("y", 12)
-                .selectAll("tspan")
-                .data(d => [d.data.name, formatNumber(d.value)])
-                .join("tspan")
+                    .attr("x", 3)
+                    .attr("y", 12)
+                    .selectAll("tspan")
+                    .data(d => [d.data.name, formatNumber(d.value)])
+                    .join("tspan")
                     .attr("x", 3)
                     .attr("dy", (d, i) => i ? "1em" : 0)
                     .attr("fill-opacity", (d, i) => i ? 0.7 : 1)
                     .text(d => d);
 
+                // Update positions and sizes
                 leaf.transition()
-                .duration(duration)
-                .attr("transform", d => `translate(${d.x0},${d.y0})`)
-                .select("rect")
+                    .duration(duration)
+                    .attr("transform", d => `translate(${d.x0},${d.y0})`)
+                    .select("rect")
                     .attr("width", d => d.x1 - d.x0)
                     .attr("height", d => d.y1 - d.y0);
-            
 
+                // Animate value text updates for number growing effect
                 leaf.select("text tspan:last-child")
-                .transition()
-                .duration(duration)
-                .tween("text", function(d) {
-                    const i = d3.interpolate(parseNumber(this.textContent), d.value);
-                    return function(t) {
-                    this.textContent = formatNumber(i(t));
-                    };
-                });
+                    .transition()
+                    .duration(duration)
+                    .tween("text", function (d) {
+                        const i = d3.interpolate(parseNumber(this.textContent), d.value);
+                        return function (t) {
+                            this.textContent = formatNumber(i(t));
+                        };
+                    });
 
+                // Remove exited nodes
                 leaf.exit().remove();
             }
 
-            
+            // Initial render for first year (2015)
             update(0);
 
+            // Handle slider input to change the year
             d3.select("#yearSlider")
                 .attr("max", keys.length - 1)
                 .on("input", function () {
-                update(+this.value, 1000);
+                    update(+this.value, 1000);
                 });
-            });
-        }, [])
-        return (
-            <div>
-            <input type="range" id="yearSlider" min="0" max="20" step="1" className={styles.finantial_loss__slider} value={inputValue} onChange={(event) => {setInputValue(event.target.value)}}/>
-            <div id="chart"/>
+        });
+    }, []);
+
+    // Render slider and chart container
+    return (
+        <div>
+            <input
+                type="range"
+                id="yearSlider"
+                min="0"
+                max="20"
+                step="1"
+                className={styles.finantial_loss__slider}
+                value={inputValue}
+                onChange={(event) => setInputValue(event.target.value)}
+            />
+            <div id="chart" />
         </div>
-    )
-}
+    );
+};
