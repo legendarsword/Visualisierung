@@ -21,6 +21,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 If you want to add changes, you can edit the page by modifying `app/page.tsx`. This is the entry point of application.
 
+# Dataset
+[Global Cybersecurity Threats (2015-2024)](https://www.kaggle.com/datasets/atharvasoundankar/global-cybersecurity-threats-2015-2024) from Kaggle
+
 
 # Visualizations Overview
 
@@ -76,7 +79,12 @@ This hierarchical bar chart offers an intuitive and flexible way to analyze the 
 It allows users to filter the data interactively, identify patterns, and gain detailed insights across multiple dimensions: geography, attack type, and industry sector.
 
 
----
+# Inspiration Code
+[Bar Chart](https://observablehq.com/@d3/hierarchical-bar-chart)
+
+[Tree Map](https://observablehq.com/@d3/treemap/2)
+
+[Donut](https://codepen.io/ademps/pen/MWKXXN)
 
 # Project Structure
 
