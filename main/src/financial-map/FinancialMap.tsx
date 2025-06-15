@@ -167,7 +167,7 @@ export const FinancialMap = () => {
                 leaf.exit().remove();
             }
 
-            // Initial render for first year (2015)
+            // Initial render for first year 2015
             update(0);
 
             // Handle slider input to change the year
