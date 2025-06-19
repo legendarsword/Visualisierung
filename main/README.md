@@ -2,7 +2,7 @@ This project is a web-based application for visualizing cybersecurity-related da
 
 # Getting Started
 
-On first run, use this command to install dependencies:
+On first run, go to the main folder and use this command to install dependencies:
 ```bash
 npm install
 ```
@@ -78,6 +78,40 @@ Displays the industries most affected by the selected attack type in the selecte
 This hierarchical bar chart offers an intuitive and flexible way to analyze the dataset.  
 It allows users to filter the data interactively, identify patterns, and gain detailed insights across multiple dimensions: geography, attack type, and industry sector.
 
+--- 
+
+## 3. Selection Pie Chart Visualization
+
+This visualization displays the selected column of the original data, using an interactive pie chart.
+
+### Functionality  
+- **2 Selectors**  
+  With the upper selector you can choose the column of the original data, with the lower selector which calculated value represents the size of the pie slice
+
+- **Selections**
+  Each slice serves as a selection. When you click on it, the existing data is filtered and made available for the next selection.
+
+- **Showing raw Data**
+  The button below the diagram switches between diagram view and table view. All data used to display the diagram is displayed in the table view. 
+  The table view also appears after three selections in the diagram.
+
+- **Dynamic Updates**  
+  As soon as the selector are changed, the diagram is also automatically updated. 
+
+- **Value Display**  
+  If you move the mouse over the slices, a tooltip window appears in which the calculated values for this pie slice are displayed.
+
+### Data Representation  
+- **Pie Slices**  
+  Each pie slice represents a part of its data depending on the selection, e.g. a country in the Countries column.
+  The columns "Financial Loss (in Million $)", "Number of Affected Users" and "Incident Resolution Time (in Hours)" are divided into 5 pie slices with a range depending on the total data.
+
+- **Slice Size**  
+  The size of the slice and its sorting depends on the selection of the lower selection.
+
+This visualization is intended to give the user the opportunity to decide on the view and selection of the data.
+
+---
 
 # Inspiration Code
 [Bar Chart](https://observablehq.com/@d3/hierarchical-bar-chart)
