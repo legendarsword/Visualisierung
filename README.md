@@ -93,7 +93,7 @@ This visualization displays the selected column of the original data, using an i
 
 - **Showing raw Data**
   The button below the diagram switches between diagram view and table view. All data used to display the diagram is displayed in the table view. 
-  The table view also appears after three selections in the diagram.
+  The table view also appears after three selections in the diagram to show the remaining data.
 
 - **Dynamic Updates**  
   As soon as the selector are changed, the diagram is also automatically updated. 
