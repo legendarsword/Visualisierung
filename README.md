@@ -1,3 +1,6 @@
+# Global Cybersecurity Threats (2015-2024)
+Anastasiia Morozova, Alexander Hampel
+
 This project is a web-based application for visualizing cybersecurity-related datasets using interactive D3-based diagrams. It is built with **Next.js**, **TypeScript**, and **D3.js**, and organized in a modular and maintainable structure.
 
 # Getting Started
